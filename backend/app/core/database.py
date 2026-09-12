@@ -5,7 +5,6 @@ from app.core.config import settings
 
 engine = create_engine(
     settings.SQLALCHEMY_DATABASE_URI,
-    connect_args={"charset": "utf8mb4"},
     pool_pre_ping=True,
     pool_recycle=3600,
     pool_size=10,

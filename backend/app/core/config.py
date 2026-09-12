@@ -15,7 +15,17 @@ class Settings(BaseSettings):
     
     @property
     def SQLALCHEMY_DATABASE_URI(self) -> str:
-        return f"mysql+pymysql://{self.DATABASE_USER}:{self.DATABASE_PASSWORD}@{self.DATABASE_HOST}:{self.DATABASE_PORT}/{self.DATABASE_NAME}?charset=utf8mb4"
+        # If DATABASE_URL is provided (e.g., by Vercel/Supabase), use it directly
+        database_url = os.getenv("DATABASE_URL")
+        if database_url:
+            # SQLAlchemy 1.4+ requires postgresql:// instead of postgres://
+            if database_url.startswith("postgres://"):
+                database_url = database_url.replace("postgres://", "postgresql+psycopg2://", 1)
+            elif database_url.startswith("postgresql://"):
+                database_url = database_url.replace("postgresql://", "postgresql+psycopg2://", 1)
+            return database_url
+            
+        return f"postgresql+psycopg2://{self.DATABASE_USER}:{self.DATABASE_PASSWORD}@{self.DATABASE_HOST}:{self.DATABASE_PORT}/{self.DATABASE_NAME}"
 
     # JWT Authentication
     JWT_SECRET: str = os.getenv("JWT_SECRET", "supersecretjwtkey_reru_it_2026_faculty_system")
