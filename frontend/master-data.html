@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>จัดการข้อมูลระบบและสาขาวิชา - คณะเทคโนโลยีสารสนเทศ มรภ.ร้อยเอ็ด</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        window.tailwind = window.tailwind || {};
+        tailwind.config = {
+            darkMode: ['class', '[data-theme="dark"]'],
+        };
+    </script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link rel="stylesheet" href="css/style.css">
+    <script>
+        const theme = localStorage.getItem("theme") || (window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+        document.documentElement.setAttribute("data-theme", theme);
+    </script>
+</head>
+<body class="min-h-screen flex">
+
+    <aside id="sidebar" class="w-64 fixed inset-y-0 left-0 z-40 hidden lg:block transition-all"></aside>
+
+    <div class="flex-1 lg:ml-64 flex flex-col min-h-screen">
+        <header id="header"></header>
+
+        <main class="p-6 lg:p-8 flex-1 max-w-7xl w-full mx-auto space-y-6">
+            <div class="flex items-center justify-between">
+                <div>
+                    <h1 class="text-xl lg:text-2xl font-bold text-slate-800 dark:text-slate-100 tracking-tight">จัดการข้อมูลตั้งค่าระบบ (Master Data)</h1>
+                    <p class="text-xs text-slate-400 mt-0.5">จัดการสาขาวิชา ตำแหน่งงาน ประเภทบุคลากร และความเชี่ยวชาญ</p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Branches -->
+                <div class="bg-white p-6 rounded-2xl border border-slate-200/80 space-y-4">
+                    <div class="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-800">
+                        <h2 class="text-sm font-bold text-slate-800 dark:text-slate-100 flex items-center gap-2">
+                            <i data-lucide="git-branch" class="w-4 h-4 text-blue-500"></i>
+                            สาขาวิชา / หน่วยงานภายใน
+                        </h2>
+                        <button type="button" onclick="openAddBranchModal()" class="px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs font-semibold transition-all flex items-center gap-1.5">
+                            <i data-lucide="plus" class="w-3.5 h-3.5"></i>
+                            เพิ่มสาขา
+                        </button>
+                    </div>
+                    <div id="branch-list" class="divide-y divide-slate-100 dark:divide-slate-800 text-xs"></div>
+                </div>
+
+                <!-- Positions -->
+                <div class="bg-white p-6 rounded-2xl border border-slate-200/80 space-y-4">
+                    <div class="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-800">
+                        <h2 class="text-sm font-bold text-slate-800 dark:text-slate-100 flex items-center gap-2">
+                            <i data-lucide="award" class="w-4 h-4 text-indigo-500"></i>
+                            ตำแหน่งงาน
+                        </h2>
+                        <button type="button" onclick="openAddPositionModal()" class="px-3 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-semibold transition-all flex items-center gap-1.5">
+                            <i data-lucide="plus" class="w-3.5 h-3.5"></i>
+                            เพิ่มตำแหน่ง
+                        </button>
+                    </div>
+                    <div id="position-list" class="divide-y divide-slate-100 dark:divide-slate-800 text-xs"></div>
+                </div>
+
+                <!-- Personnel Types -->
+                <div class="bg-white p-6 rounded-2xl border border-slate-200/80 space-y-4">
+                    <div class="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-800">
+                        <h2 class="text-sm font-bold text-slate-800 dark:text-slate-100 flex items-center gap-2">
+                            <i data-lucide="tag" class="w-4 h-4 text-emerald-500"></i>
+                            ประเภทบุคลากร
+                        </h2>
+                        <button type="button" onclick="openAddTypeModal()" class="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-semibold transition-all flex items-center gap-1.5">
+                            <i data-lucide="plus" class="w-3.5 h-3.5"></i>
+                            เพิ่มประเภท
+                        </button>
+                    </div>
+                    <div id="type-list" class="divide-y divide-slate-100 dark:divide-slate-800 text-xs"></div>
+                </div>
+
+                <!-- Expertise Master -->
+                <div class="bg-white p-6 rounded-2xl border border-slate-200/80 space-y-4">
+                    <div class="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-800">
+                        <h2 class="text-sm font-bold text-slate-800 dark:text-slate-100 flex items-center gap-2">
+                            <i data-lucide="sparkles" class="w-4 h-4 text-amber-500"></i>
+                            กลุ่มความเชี่ยวชาญ
+                        </h2>
+                        <button type="button" onclick="openAddExpertiseModal()" class="px-3 py-1.5 bg-amber-600 hover:bg-amber-700 text-white rounded-xl text-xs font-semibold transition-all flex items-center gap-1.5">
+                            <i data-lucide="plus" class="w-3.5 h-3.5"></i>
+                            เพิ่มความเชี่ยวชาญ
+                        </button>
+                    </div>
+                    <div id="expertise-list" class="flex flex-wrap gap-2 text-xs"></div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Scripts -->
+    <script src="js/api.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/ui.js"></script>
+    <script src="js/components.js"></script>
+    <script>
+        /* global auth, apiClient, ui, lucide, renderLayout */
+        if (auth.requireAuth(["ADMIN"])) {
+            renderLayout("master-data");
+            loadAllMaster();
+        }
+
+        async function loadAllMaster() {
+            try {
+                const [branches, positions, types, expertises] = await Promise.all([
+                    apiClient.get("/branches"),
+                    apiClient.get("/positions"),
+                    apiClient.get("/personnel-types"),
+                    apiClient.get("/expertise")
+                ]);
+
+                // Branches
+                document.getElementById("branch-list").innerHTML = branches.map(b => `
+                    <div class="py-2.5 flex items-center justify-between">
+                        <div>
+                            <p class="font-semibold text-slate-800 dark:text-slate-100">${b.name}</p>
+                            <p class="text-[11px] text-slate-400">รหัส: ${b.code || '-'}</p>
+                        </div>
+                        <span class="px-2 py-0.5 bg-blue-50 dark:bg-blue-950/40 text-blue-600 dark:text-blue-300 border border-blue-200 dark:border-blue-800/40 rounded text-[10px] font-mono">ID: ${b.id}</span>
+                    </div>
+                `).join("");
+
+                // Positions
+                document.getElementById("position-list").innerHTML = positions.map(p => `
+                    <div class="py-2.5 flex items-center justify-between">
+                        <p class="font-semibold text-slate-800 dark:text-slate-100">${p.name}</p>
+                        <span class="px-2 py-0.5 bg-indigo-50 dark:bg-indigo-950/40 text-indigo-600 dark:text-indigo-300 border border-indigo-200 dark:border-indigo-800/40 rounded text-[10px] font-mono">ID: ${p.id}</span>
+                    </div>
+                `).join("");
+
+                // Types
+                document.getElementById("type-list").innerHTML = types.map(t => `
+                    <div class="py-2.5 flex items-center justify-between">
+                        <p class="font-semibold text-slate-800 dark:text-slate-100">${t.name}</p>
+                        <span class="px-2 py-0.5 bg-emerald-50 dark:bg-emerald-950/40 text-emerald-600 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800/40 rounded text-[10px] font-mono">ID: ${t.id}</span>
+                    </div>
+                `).join("");
+
+                // Expertises
+                document.getElementById("expertise-list").innerHTML = expertises.map(e => `
+                    <span class="px-2.5 py-1 bg-amber-50 dark:bg-amber-950/40 text-amber-800 dark:text-amber-300 border border-amber-200 dark:border-amber-800/40 rounded-xl font-medium">
+                        ${e.name}
+                    </span>
+                `).join("");
+
+                lucide.createIcons();
+            } catch (err) {
+                ui.showToast(err.message, "error");
+            }
+        }
+
+        function openAddBranchModal() {
+            const modal = document.createElement("div");
+            modal.className = "fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-sm p-4";
+            modal.innerHTML = `
+                <div class="bg-white dark:bg-slate-900 rounded-2xl max-w-md w-full p-6 shadow-2xl border border-slate-200 dark:border-slate-800">
+                    <h3 class="text-sm font-bold text-slate-800 dark:text-slate-100 mb-4 pb-2 border-b border-slate-100 dark:border-slate-800">เพิ่มสาขาวิชา / หน่วยงาน</h3>
+                    <form id="add-branch-form" class="space-y-3 text-xs">
+                        <div>
+                            <label class="block font-semibold text-slate-600 dark:text-slate-300 mb-1">ชื่อสาขาวิชา *</label>
+                            <input type="text" id="new-branch-name" class="w-full p-2.5 border rounded-xl outline-none" required placeholder="เช่น สาขาวิชา AI">
+                        </div>
+                        <div>
+                            <label class="block font-semibold text-slate-600 dark:text-slate-300 mb-1">รหัสย่อ (Code)</label>
+                            <input type="text" id="new-branch-code" class="w-full p-2.5 border rounded-xl outline-none" placeholder="เช่น AI">
+                        </div>
+                        <div class="flex justify-end gap-2 pt-4 border-t border-slate-100 dark:border-slate-800">
+                            <button type="button" onclick="this.closest('.fixed').remove()" class="px-4 py-2 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl font-medium">ยกเลิก</button>
+                            <button type="submit" class="px-5 py-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-xl shadow-sm">บันทึก</button>
+                        </div>
+                    </form>
+                </div>
+            `;
+            document.body.appendChild(modal);
+            modal.querySelector("#add-branch-form").onsubmit = async (e) => {
+                e.preventDefault();
+                try {
+                    await apiClient.post("/branches", {
+                        department_id: 1,
+                        name: document.getElementById("new-branch-name").value.trim(),
+                        code: document.getElementById("new-branch-code").value.trim() || null
+                    });
+                    ui.showToast("เพิ่มสาขาวิชาสำเร็จ", "success");
+                    modal.remove();
+                    loadAllMaster();
+                } catch (err) {
+                    ui.showToast(err.message, "error");
+                }
+            };
+        }
+
+        function openAddPositionModal() {
+            const modal = document.createElement("div");
+            modal.className = "fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-sm p-4";
+            modal.innerHTML = `
+                <div class="bg-white dark:bg-slate-900 rounded-2xl max-w-md w-full p-6 shadow-2xl border border-slate-200 dark:border-slate-800">
+                    <h3 class="text-sm font-bold text-slate-800 dark:text-slate-100 mb-4 pb-2 border-b border-slate-100 dark:border-slate-800">เพิ่มตำแหน่งงาน</h3>
+                    <form id="add-pos-form" class="space-y-3 text-xs">
+                        <div>
+                            <label class="block font-semibold text-slate-600 dark:text-slate-300 mb-1">ชื่อตำแหน่งงาน *</label>
+                            <input type="text" id="new-pos-name" class="w-full p-2.5 border rounded-xl outline-none" required placeholder="เช่น หัวหน้าฝ่าย...">
+                        </div>
+                        <div class="flex justify-end gap-2 pt-4 border-t border-slate-100 dark:border-slate-800">
+                            <button type="button" onclick="this.closest('.fixed').remove()" class="px-4 py-2 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl font-medium">ยกเลิก</button>
+                            <button type="submit" class="px-5 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-xl shadow-sm">บันทึก</button>
+                        </div>
+                    </form>
+                </div>
+            `;
+            document.body.appendChild(modal);
+            modal.querySelector("#add-pos-form").onsubmit = async (e) => {
+                e.preventDefault();
+                try {
+                    await apiClient.post("/positions", {
+                        name: document.getElementById("new-pos-name").value.trim()
+                    });
+                    ui.showToast("เพิ่มตำแหน่งงานสำเร็จ", "success");
+                    modal.remove();
+                    loadAllMaster();
+                } catch (err) {
+                    ui.showToast(err.message, "error");
+                }
+            };
+        }
+
+        function openAddTypeModal() {
+            const modal = document.createElement("div");
+            modal.className = "fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-sm p-4";
+            modal.innerHTML = `
+                <div class="bg-white dark:bg-slate-900 rounded-2xl max-w-md w-full p-6 shadow-2xl border border-slate-200 dark:border-slate-800">
+                    <h3 class="text-sm font-bold text-slate-800 dark:text-slate-100 mb-4 pb-2 border-b border-slate-100 dark:border-slate-800">เพิ่มประเภทบุคลากร</h3>
+                    <form id="add-type-form" class="space-y-3 text-xs">
+                        <div>
+                            <label class="block font-semibold text-slate-600 dark:text-slate-300 mb-1">ชื่อประเภทบุคลากร *</label>
+                            <input type="text" id="new-type-name" class="w-full p-2.5 border rounded-xl outline-none" required placeholder="เช่น พนักงานโครงการ">
+                        </div>
+                        <div class="flex justify-end gap-2 pt-4 border-t border-slate-100 dark:border-slate-800">
+                            <button type="button" onclick="this.closest('.fixed').remove()" class="px-4 py-2 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl font-medium">ยกเลิก</button>
+                            <button type="submit" class="px-5 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold rounded-xl shadow-sm">บันทึก</button>
+                        </div>
+                    </form>
+                </div>
+            `;
+            document.body.appendChild(modal);
+            modal.querySelector("#add-type-form").onsubmit = async (e) => {
+                e.preventDefault();
+                try {
+                    await apiClient.post("/personnel-types", {
+                        name: document.getElementById("new-type-name").value.trim()
+                    });
+                    ui.showToast("เพิ่มประเภทบุคลากรสำเร็จ", "success");
+                    modal.remove();
+                    loadAllMaster();
+                } catch (err) {
+                    ui.showToast(err.message, "error");
+                }
+            };
+        }
+
+        function openAddExpertiseModal() {
+            const modal = document.createElement("div");
+            modal.className = "fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-sm p-4";
+            modal.innerHTML = `
+                <div class="bg-white dark:bg-slate-900 rounded-2xl max-w-md w-full p-6 shadow-2xl border border-slate-200 dark:border-slate-800">
+                    <h3 class="text-sm font-bold text-slate-800 dark:text-slate-100 mb-4 pb-2 border-b border-slate-100 dark:border-slate-800">เพิ่มกลุ่มความเชี่ยวชาญ</h3>
+                    <form id="add-exp-form" class="space-y-3 text-xs">
+                        <div>
+                            <label class="block font-semibold text-slate-600 dark:text-slate-300 mb-1">ชื่อความเชี่ยวชาญ *</label>
+                            <input type="text" id="new-exp-name" class="w-full p-2.5 border rounded-xl outline-none" required placeholder="เช่น Quantum Computing">
+                        </div>
+                        <div class="flex justify-end gap-2 pt-4 border-t border-slate-100 dark:border-slate-800">
+                            <button type="button" onclick="this.closest('.fixed').remove()" class="px-4 py-2 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl font-medium">ยกเลิก</button>
+                            <button type="submit" class="px-5 py-2 bg-amber-600 hover:bg-amber-700 text-white font-semibold rounded-xl shadow-sm">บันทึก</button>
+                        </div>
+                    </form>
+                </div>
+            `;
+            document.body.appendChild(modal);
+            modal.querySelector("#add-exp-form").onsubmit = async (e) => {
+                e.preventDefault();
+                try {
+                    await apiClient.post("/expertise", {
+                        name: document.getElementById("new-exp-name").value.trim()
+                    });
+                    ui.showToast("เพิ่มความเชี่ยวชาญสำเร็จ", "success");
+                    modal.remove();
+                    loadAllMaster();
+                } catch (err) {
+                    ui.showToast(err.message, "error");
+                }
+            };
+        }
+    </script>
+</body>
+</html>

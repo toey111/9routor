@@ -1,0 +1,631 @@
+@import url('https://fonts.googleapis.com/css2?family=Prompt:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400&family=Inter:wght@300;400;500;600;700&display=swap');
+
+/* ==========================================================================
+   MINIMALIST DESIGN SYSTEM & TOKENS (LIGHT & DARK THEMES)
+   ========================================================================== */
+
+:root {
+    /* Primary & Brand Accents */
+    --primary-600: #2563eb;
+    --primary-500: #3b82f6;
+    --primary-400: #60a5fa;
+    --primary-gradient: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
+    
+    --accent-emerald: #10b981;
+    --accent-amber: #f59e0b;
+    --accent-rose: #f43f5e;
+    --accent-indigo: #6366f1;
+
+    /* Light Theme (โหมดเช้า / สว่าง) Tokens */
+    --page-bg: #f8fafc;
+    --page-bg-subtle: #f1f5f9;
+    --page-text: #0f172a;
+    --page-text-muted: #64748b;
+    --page-text-subtle: #94a3b8;
+
+    --panel-bg: #ffffff;
+    --panel-bg-glass: rgba(255, 255, 255, 0.85);
+    --panel-border: rgba(226, 232, 240, 0.9);
+    --panel-border-subtle: rgba(241, 245, 249, 0.8);
+    --panel-muted: #f8fafc;
+
+    --header-bg: rgba(255, 255, 255, 0.82);
+    --header-border: rgba(226, 232, 240, 0.8);
+    --header-text: #0f172a;
+
+    --sidebar-bg: #090d16;
+    --sidebar-border: rgba(255, 255, 255, 0.08);
+    --sidebar-text: #f1f5f9;
+    --sidebar-muted: #94a3b8;
+    --sidebar-active: #2563eb;
+
+    --input-bg: #ffffff;
+    --input-border: #cbd5e1;
+    --input-focus: #3b82f6;
+
+    --table-header-bg: #f8fafc;
+    --table-border: #f1f5f9;
+    --table-row-hover: #f8fafc;
+
+    --shadow-xs: 0 1px 2px 0 rgba(15, 23, 42, 0.04);
+    --shadow-sm: 0 1px 3px 0 rgba(15, 23, 42, 0.06), 0 1px 2px -1px rgba(15, 23, 42, 0.04);
+    --shadow-md: 0 4px 6px -1px rgba(15, 23, 42, 0.07), 0 2px 4px -2px rgba(15, 23, 42, 0.05);
+    --shadow-lg: 0 10px 25px -3px rgba(15, 23, 42, 0.08), 0 4px 6px -4px rgba(15, 23, 42, 0.04);
+    --shadow-xl: 0 20px 30px -4px rgba(15, 23, 42, 0.1);
+
+    --chart-grid: rgba(226, 232, 240, 0.8);
+    --chart-text: #64748b;
+}
+
+/* Dark Theme (โหมดมืด) Tokens */
+body[data-theme="dark"] {
+    --page-bg: #090d16;
+    --page-bg-subtle: #0f172a;
+    --page-text: #f8fafc;
+    --page-text-muted: #94a3b8;
+    --page-text-subtle: #64748b;
+
+    --panel-bg: #111827;
+    --panel-bg-glass: rgba(17, 24, 39, 0.85);
+    --panel-border: rgba(255, 255, 255, 0.08);
+    --panel-border-subtle: rgba(255, 255, 255, 0.04);
+    --panel-muted: #1e293b;
+
+    --header-bg: rgba(15, 23, 42, 0.85);
+    --header-border: rgba(255, 255, 255, 0.08);
+    --header-text: #f8fafc;
+
+    --sidebar-bg: #060911;
+    --sidebar-border: rgba(255, 255, 255, 0.06);
+    --sidebar-text: #f8fafc;
+    --sidebar-muted: #94a3b8;
+    --sidebar-active: #3b82f6;
+
+    --input-bg: #0f172a;
+    --input-border: #334155;
+    --input-focus: #60a5fa;
+
+    --table-header-bg: #111827;
+    --table-border: #1e293b;
+    --table-row-hover: #162033;
+
+    --shadow-xs: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
+    --shadow-sm: 0 2px 4px 0 rgba(0, 0, 0, 0.4);
+    --shadow-md: 0 4px 8px 0 rgba(0, 0, 0, 0.45);
+    --shadow-lg: 0 12px 24px -2px rgba(0, 0, 0, 0.55);
+    --shadow-xl: 0 20px 35px -3px rgba(0, 0, 0, 0.65);
+
+    --chart-grid: rgba(255, 255, 255, 0.08);
+    --chart-text: #94a3b8;
+}
+
+/* ==========================================================================
+   GLOBAL RESET & SMOOTH TRANSITIONS
+   ========================================================================== */
+
+* {
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: 'Prompt', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    background-color: var(--page-bg);
+    color: var(--page-text);
+    min-height: 100vh;
+    letter-spacing: -0.012em;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    transition: background-color 0.25s ease, color 0.25s ease;
+}
+
+/* Subtle background texture for high-end minimal feel */
+body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background-image: radial-gradient(var(--panel-border) 1px, transparent 1px);
+    background-size: 24px 24px;
+    opacity: 0.4;
+    pointer-events: none;
+    z-index: 0;
+}
+
+/* Universal interactive elements transitions */
+button,
+a,
+input,
+select,
+textarea {
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+button:hover:not(:disabled),
+.btn-hover:hover {
+    transform: translateY(-1px);
+}
+
+button:active:not(:disabled) {
+    transform: translateY(0px);
+}
+
+button:disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+/* ==========================================================================
+   LAYOUT & CONTAINER OVERRIDES
+   ========================================================================== */
+
+main,
+header,
+#sidebar,
+#toast-container {
+    position: relative;
+    z-index: 1;
+}
+
+/* Header styling */
+#header > div {
+    background: var(--header-bg);
+    color: var(--header-text);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border-bottom: 1px solid var(--header-border);
+    transition: background-color 0.25s ease, border-color 0.25s ease;
+}
+
+/* Sidebar styling */
+#sidebar > div {
+    background: var(--sidebar-bg);
+    border-right: 1px solid var(--sidebar-border);
+    box-shadow: 12px 0 30px rgba(0, 0, 0, 0.25);
+    transition: background-color 0.25s ease;
+}
+
+/* Cards & Panel Overrides */
+.bg-white {
+    background-color: var(--panel-bg) !important;
+    border-color: var(--panel-border) !important;
+    color: var(--page-text) !important;
+    box-shadow: var(--shadow-sm);
+    transition: background-color 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+.bg-slate-50,
+.bg-slate-100 {
+    background-color: var(--panel-muted) !important;
+    border-color: var(--panel-border) !important;
+    color: var(--page-text) !important;
+    transition: background-color 0.25s ease, border-color 0.25s ease;
+}
+
+/* Dark theme specific text color corrections for Tailwind slate utilities */
+body[data-theme="dark"] .text-slate-800,
+body[data-theme="dark"] .text-slate-900 {
+    color: #f8fafc !important;
+}
+
+body[data-theme="dark"] .text-slate-700 {
+    color: #e2e8f0 !important;
+}
+
+body[data-theme="dark"] .text-slate-600 {
+    color: #cbd5e1 !important;
+}
+
+body[data-theme="dark"] .text-slate-500 {
+    color: #94a3b8 !important;
+}
+
+body[data-theme="dark"] .text-slate-400 {
+    color: #64748b !important;
+}
+
+body[data-theme="dark"] .border-slate-100,
+body[data-theme="dark"] .border-slate-200,
+body[data-theme="dark"] .border-slate-200\/80,
+body[data-theme="dark"] .border-slate-200\/60,
+body[data-theme="dark"] .border-slate-300 {
+    border-color: var(--panel-border) !important;
+}
+
+body[data-theme="dark"] .divide-slate-100 > :not([hidden]) ~ :not([hidden]),
+body[data-theme="dark"] .divide-slate-200 > :not([hidden]) ~ :not([hidden]) {
+    border-color: var(--panel-border) !important;
+}
+
+/* ==========================================================================
+   INPUTS & FORM CONTROLS
+   ========================================================================== */
+
+input,
+select,
+textarea {
+    background-color: var(--input-bg) !important;
+    border: 1px solid var(--input-border) !important;
+    color: var(--page-text) !important;
+    border-radius: 0.75rem;
+    transition: all 0.2s ease;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+    border-color: var(--input-focus) !important;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15) !important;
+    outline: none !important;
+}
+
+input::placeholder,
+textarea::placeholder {
+    color: var(--page-text-subtle) !important;
+}
+
+/* ==========================================================================
+   TABLES & LISTS
+   ========================================================================== */
+
+table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+}
+
+thead th {
+    background-color: var(--table-header-bg) !important;
+    color: var(--page-text-muted) !important;
+    font-weight: 600 !important;
+    letter-spacing: 0.03em;
+    border-bottom: 1px solid var(--panel-border) !important;
+}
+
+tbody tr {
+    transition: background-color 0.15s ease;
+}
+
+tbody tr:hover {
+    background-color: var(--table-row-hover) !important;
+}
+
+tbody td {
+    border-color: var(--table-border) !important;
+}
+
+/* ==========================================================================
+   MINIMALIST THEME TOGGLE SWITCH (โหมดเช้า / โหมดมืด)
+   ========================================================================== */
+
+.theme-toggle-btn {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.4rem 0.85rem;
+    height: 38px;
+    border-radius: 9999px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    cursor: pointer;
+    background: #ffffff;
+    color: #334155;
+    border: 1px solid #e2e8f0;
+    box-shadow: var(--shadow-xs);
+    user-select: none;
+    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.theme-toggle-btn:hover {
+    background: #f8fafc;
+    border-color: #cbd5e1;
+    color: #0f172a;
+    box-shadow: var(--shadow-sm);
+}
+
+.theme-toggle-btn.is-dark {
+    background: #1e293b;
+    color: #f8fafc;
+    border-color: rgba(255, 255, 255, 0.12);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.theme-toggle-btn.is-dark:hover {
+    background: #27354f;
+    border-color: rgba(255, 255, 255, 0.2);
+}
+
+.theme-state-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.2s ease;
+}
+
+.theme-icon-light {
+    color: #f59e0b;
+}
+
+.theme-icon-dark {
+    color: #93c5fd;
+    display: none;
+}
+
+body[data-theme="dark"] .theme-icon-light {
+    display: none;
+}
+
+body[data-theme="dark"] .theme-icon-dark {
+    display: flex;
+}
+
+.theme-toggle-label {
+    display: inline-block;
+    line-height: 1;
+}
+
+/* ==========================================================================
+   LOGIN PAGE SPECIFIC STYLES
+   ========================================================================== */
+
+.login-page {
+    background: radial-gradient(circle at 15% 15%, rgba(37, 99, 235, 0.15), transparent 30%),
+                radial-gradient(circle at 85% 85%, rgba(99, 102, 241, 0.15), transparent 30%),
+                #0b0f19;
+    position: relative;
+    overflow: hidden;
+}
+
+.login-shell {
+    position: relative;
+    z-index: 10;
+}
+
+.login-orb {
+    position: absolute;
+    border-radius: 9999px;
+    filter: blur(50px);
+    opacity: 0.35;
+    pointer-events: none;
+}
+
+.login-orb-one {
+    width: 20rem;
+    height: 20rem;
+    background: #2563eb;
+    top: -5rem;
+    left: -5rem;
+}
+
+.login-orb-two {
+    width: 22rem;
+    height: 22rem;
+    background: #4f46e5;
+    bottom: -6rem;
+    right: -6rem;
+}
+
+.login-card {
+    background: rgba(255, 255, 255, 0.95);
+    border: 1px solid rgba(255, 255, 255, 0.8);
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.35);
+}
+
+body[data-theme="dark"] .login-card {
+    background: rgba(17, 24, 39, 0.92);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
+}
+
+.demo-button {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    transition: all 0.2s ease;
+}
+
+.demo-button:hover {
+    background: #ffffff;
+    border-color: #93c5fd;
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-sm);
+}
+
+body[data-theme="dark"] .demo-button {
+    background: #1e293b;
+    border-color: rgba(255, 255, 255, 0.08);
+    color: #e2e8f0;
+}
+
+body[data-theme="dark"] .demo-button:hover {
+    background: #27354f;
+    border-color: #3b82f6;
+}
+
+/* ==========================================================================
+   MINIMALIST TOAST NOTIFICATIONS
+   ========================================================================== */
+
+#toast-container {
+    position: fixed;
+    top: 1.25rem;
+    right: 1.25rem;
+    z-index: 99999;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    pointer-events: none;
+    max-width: 90vw;
+    width: 380px;
+}
+
+.toast {
+    pointer-events: auto;
+    animation: toastEnter 0.28s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    border-radius: 1rem;
+    padding: 0.85rem 1.1rem;
+    font-size: 0.8125rem;
+    font-weight: 500;
+    box-shadow: var(--shadow-lg);
+    backdrop-filter: blur(12px);
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+@keyframes toastEnter {
+    from {
+        opacity: 0;
+        transform: translateY(-10px) scale(0.96);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+/* ==========================================================================
+   CUSTOM SLEEK SCROLLBAR
+   ========================================================================== */
+
+::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+    background: rgba(148, 163, 184, 0.4);
+    border-radius: 999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: rgba(100, 116, 139, 0.6);
+}
+
+body[data-theme="dark"] ::-webkit-scrollbar-thumb {
+    background: rgba(148, 163, 184, 0.25);
+}
+
+body[data-theme="dark"] ::-webkit-scrollbar-thumb:hover {
+    background: rgba(148, 163, 184, 0.45);
+}
+
+/* ==========================================================================
+   INPUT VALIDATION & UTILITY ANIMATIONS
+   ========================================================================== */
+
+.input-error {
+    border-color: #f43f5e !important;
+    box-shadow: 0 0 0 3px rgba(244, 63, 94, 0.2) !important;
+    background-color: rgba(244, 63, 94, 0.03) !important;
+}
+
+.shake-anim {
+    animation: shake 0.4s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+}
+
+@keyframes shake {
+    10%, 90% { transform: translate3d(-1px, 0, 0); }
+    20%, 80% { transform: translate3d(2px, 0, 0); }
+    30%, 50%, 70% { transform: translate3d(-3px, 0, 0); }
+    40%, 60% { transform: translate3d(3px, 0, 0); }
+}
+
+.no-scrollbar::-webkit-scrollbar {
+    display: none;
+}
+
+.no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+/* ==========================================================================
+   ENHANCED PROFILE & TIMELINE RICH STYLING
+   ========================================================================== */
+
+.glass-card {
+    background: rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(226, 232, 240, 0.8);
+}
+
+body[data-theme="dark"] .glass-card {
+    background: rgba(15, 23, 42, 0.85);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.timeline-line {
+    position: absolute;
+    left: 24px;
+    top: 24px;
+    bottom: 24px;
+    width: 2px;
+    background: linear-gradient(180deg, #3b82f6 0%, #8b5cf6 50%, #ec4899 100%);
+}
+
+.glow-indigo {
+    box-shadow: 0 10px 25px -5px rgba(99, 102, 241, 0.35);
+}
+
+.glow-blue {
+    box-shadow: 0 10px 25px -5px rgba(59, 130, 246, 0.35);
+}
+
+.glow-emerald {
+    box-shadow: 0 10px 25px -5px rgba(16, 185, 129, 0.35);
+}
+
+.glow-amber {
+    box-shadow: 0 10px 25px -5px rgba(245, 158, 11, 0.35);
+}
+
+.glow-rose {
+    box-shadow: 0 10px 25px -5px rgba(244, 63, 94, 0.35);
+}
+
+.hover-card-lift {
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.hover-card-lift:hover {
+    transform: translateY(-3px);
+}
+
+/* ==========================================================================
+   PRINT STYLES
+   ========================================================================== */
+
+@media print {
+    aside,
+    header,
+    #action-buttons,
+    .no-print,
+    .theme-toggle-btn,
+    #sidebar-backdrop {
+        display: none !important;
+    }
+
+    body {
+        background: #ffffff !important;
+        color: #000000 !important;
+    }
+
+    .print-card {
+        border: none !important;
+        box-shadow: none !important;
+        padding: 0 !important;
+    }
+}
+
+

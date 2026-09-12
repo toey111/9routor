@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>บันทึกข้อมูลบุคลากร - คณะเทคโนโลยีสารสนเทศ มรภ.ร้อยเอ็ด</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        window.tailwind = window.tailwind || {};
+        tailwind.config = {
+            darkMode: ['class', '[data-theme="dark"]'],
+        };
+    </script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link rel="stylesheet" href="css/style.css">
+    <script>
+        const theme = localStorage.getItem("theme") || (window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+        document.documentElement.setAttribute("data-theme", theme);
+    </script>
+</head>
+<body class="min-h-screen flex">
+
+    <!-- Sidebar Container -->
+    <aside id="sidebar" class="w-64 fixed inset-y-0 left-0 z-40 hidden lg:block transition-all"></aside>
+
+    <!-- Main Content Area -->
+    <div class="flex-1 lg:ml-64 flex flex-col min-h-screen">
+        <header id="header"></header>
+
+        <main class="p-6 lg:p-8 flex-1 max-w-5xl w-full mx-auto space-y-6">
+
+            <!-- Breadcrumb & Title -->
+            <div class="flex items-center justify-between">
+                <div>
+                    <nav class="flex items-center gap-2 text-xs text-slate-400 font-medium mb-1">
+                        <a href="dashboard.html" class="hover:text-blue-500">Dashboard</a>
+                        <span>/</span>
+                        <a href="personnel-list.html" class="hover:text-blue-500">รายชื่อบุคลากร</a>
+                        <span>/</span>
+                        <span class="text-slate-700 dark:text-slate-200 font-semibold" id="form-title-breadcrumb">เพิ่มบุคลากร</span>
+                    </nav>
+                    <h1 class="text-xl lg:text-2xl font-bold text-slate-800 dark:text-slate-100 tracking-tight" id="form-heading">
+                        เพิ่มข้อมูลบุคลากรใหม่
+                    </h1>
+                </div>
+                <a href="personnel-list.html" class="px-3.5 py-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 rounded-xl text-xs font-semibold transition-all flex items-center gap-2">
+                    <i data-lucide="arrow-left" class="w-4 h-4 text-slate-400"></i>
+                    ย้อนกลับ
+                </a>
+            </div>
+
+            <!-- Form Card -->
+            <form id="personnel-form" class="space-y-6">
+
+                <!-- SECTION 1: ข้อมูลส่วนตัว -->
+                <div class="bg-white p-6 rounded-2xl border border-slate-200/80 space-y-4">
+                    <h2 class="text-sm font-bold text-slate-800 dark:text-slate-100 flex items-center gap-2 pb-3 border-b border-slate-100 dark:border-slate-800">
+                        <i data-lucide="user" class="w-4 h-4 text-blue-500"></i>
+                        1. ข้อมูลส่วนบุคคล (Personal Information)
+                    </h2>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs">
+                        <div>
+                            <label class="block font-semibold text-slate-600 dark:text-slate-300 mb-1">คำนำหน้า (ไทย) *</label>
+                            <input type="text" id="prefix_th" required placeholder="เช่น อ., ดร., ผศ.ดร." class="w-full p-2.5 border rounded-xl outline-none">
+                        </div>
+                        <div>
+                            <label class="block font-semibold text-slate-600 dark:text-slate-300 mb-1">ชื่อจริง (ไทย) *</label>
+                            <input type="text" id="first_name_th" required placeholder="ชื่อ" class="w-full p-2.5 border rounded-xl outline-none">
+                        </div>
+                        <div>
+                            <label class="block font-semibold text-slate-600 dark:text-slate-300 mb-1">นามสกุล (ไทย) *</label>
+                            <input type="text" id="last_name_th" required placeholder="นามสกุล" class="w-full p-2.5 border rounded-xl outline-none">
+                        </div>
+
+                        <div>
+                            <label class="block font-semibold text-slate-600 dark:text-slate-300 mb-1">คำนำหน้า (EN)</label>
+                            <input type="text" id="prefix_en" placeholder="เช่น Dr., Mr., Asst. Prof." class="w-full p-2.5 border rounded-xl outline-none">
+                        </div>
+                        <div>
+                            <label class="block font-semibold text-slate-600 dark:text-slate-300 mb-1">ชื่อจริง (EN)</label>
+                            <input type="text" id="first_name_en" placeholder="Firstname" class="w-full p-2.5 border rounded-xl outline-none">
+                        </div>
+                        <div>
+                            <label class="block font-semibold text-slate-600 dark:text-slate-300 mb-1">นามสกุล (EN)</label>
+                            <input type="text" id="last_name_en" placeholder="Lastname" class="w-full p-2.5 border rounded-xl outline-none">
+                        </div>
+
+                        <div>
+                            <label class="block font-semibold text-slate-600 dark:text-slate-300 mb-1">เลขประจำตัวประชาชน (13 หลัก)</label>
+                            <input type="text" id="citizen_id" maxlength="13" placeholder="1459900000000" class="w-full p-2.5 border rounded-xl outline-none font-mono">
+                        </div>
+                        <div>
+                            <label class="block font-semibold text-slate-600 dark:text-slate-300 mb-1">วันเดือนปีเกิด</label>
+                            <input type="date" id="birth_date" class="w-full p-2.5 border rounded-xl outline-none">
+                        </div>
+                        <div>
+                            <label class="block font-semibold text-slate-600 dark:text-slate-300 mb-1">เพศ</label>
+                            <select id="gender" class="w-full p-2.5 border rounded-xl outline-none">
+                                <option value="ชาย">ชาย</option>
+                                <option value="หญิง">หญิง</option>
+                                <option value="อื่นๆ">อื่นๆ</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SECTION 2: ข้อมูลการทำงาน -->
+                <div class="bg-white p-6 rounded-2xl border border-slate-200/80 space-y-4">
+                    <h2 class="text-sm font-bold text-slate-800 dark:text-slate-100 flex items-center gap-2 pb-3 border-b border-slate-100 dark:border-slate-800">
+                        <i data-lucide="briefcase" class="w-4 h-4 text-indigo-500"></i>
+                        2. ข้อมูลการปฏิบัติงาน (Work & Department Information)
+                    </h2>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs">
+                        <div>
+                            <label class="block font-semibold text-slate-600 dark:text-slate-300 mb-1">รหัสบุคลากร *</label>
+                            <input type="text" id="personnel_code" required placeholder="เช่น IT-6012" class="w-full p-2.5 border rounded-xl outline-none font-mono font-bold">
+                        </div>
+                        <div>
+                            <label class="block font-semibold text-slate-600 dark:text-slate-300 mb-1">คณะ / หน่วยงาน *</label>
+                            <select id="department_id" required class="w-full p-2.5 border rounded-xl outline-none"></select>
+                        </div>
+                        <div>
+                            <label class="block font-semibold text-slate-600 dark:text-slate-300 mb-1">สาขาวิชา</label>
+                            <select id="branch_id" class="w-full p-2.5 border rounded-xl outline-none">
+                                <option value="">- เลือกสาขาวิชา -</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label class="block font-semibold text-slate-600 dark:text-slate-300 mb-1">ตำแหน่งงาน *</label>
+                            <select id="position_id" required class="w-full p-2.5 border rounded-xl outline-none"></select>
+                        </div>
+                        <div>
+                            <label class="block font-semibold text-slate-600 dark:text-slate-300 mb-1">ประเภทบุคลากร *</label>
+                            <select id="personnel_type_id" required class="w-full p-2.5 border rounded-xl outline-none"></select>
+                        </div>
+                        <div>
+                            <label class="block font-semibold text-slate-600 dark:text-slate-300 mb-1">สถานะการทำงาน *</label>
+                            <select id="work_status" required class="w-full p-2.5 border rounded-xl outline-none font-semibold">
+                                <option value="ปฏิบัติงาน">ปฏิบัติงาน</option>
+                                <option value="ลาศึกษาต่อ">ลาศึกษาต่อ</option>
+                                <option value="ลาออก">ลาออก</option>
+                                <option value="เกษียณ">เกษียณ</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label class="block font-semibold text-slate-600 dark:text-slate-300 mb-1">วันที่เริ่มปฏิบัติงาน</label>
+                            <input type="date" id="start_work_date" class="w-full p-2.5 border rounded-xl outline-none">
+                        </div>
+                        <div>
+                            <label class="block font-semibold text-slate-600 dark:text-slate-300 mb-1">วันที่บรรจุ</label>
+                            <input type="date" id="appoint_date" class="w-full p-2.5 border rounded-xl outline-none">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SECTION 3: ข้อมูลการติดต่อ -->
+                <div class="bg-white p-6 rounded-2xl border border-slate-200/80 space-y-4">
+                    <h2 class="text-sm font-bold text-slate-800 dark:text-slate-100 flex items-center gap-2 pb-3 border-b border-slate-100 dark:border-slate-800">
+                        <i data-lucide="mail" class="w-4 h-4 text-emerald-500"></i>
+                        3. ข้อมูลการติดต่อและที่อยู่ (Contact Information)
+                    </h2>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs">
+                        <div>
+                            <label class="block font-semibold text-slate-600 dark:text-slate-300 mb-1">อีเมลทางการ *</label>
+                            <input type="email" id="email" required placeholder="user@reru.ac.th" class="w-full p-2.5 border rounded-xl outline-none">
+                        </div>
+                        <div>
+                            <label class="block font-semibold text-slate-600 dark:text-slate-300 mb-1">เบอร์โทรศัพท์มือถือ</label>
+                            <input type="text" id="phone" placeholder="08X-XXX-XXXX" class="w-full p-2.5 border rounded-xl outline-none">
+                        </div>
+                        <div>
+                            <label class="block font-semibold text-slate-600 dark:text-slate-300 mb-1">เบอร์โทรศัพท์ภายใน</label>
+                            <input type="text" id="internal_phone" placeholder="เช่น 401" class="w-full p-2.5 border rounded-xl outline-none">
+                        </div>
+
+                        <div class="sm:col-span-3">
+                            <label class="block font-semibold text-slate-600 dark:text-slate-300 mb-1">ที่อยู่ตามทะเบียนบ้าน / ปัจจุบัน</label>
+                            <input type="text" id="address" placeholder="บ้านเลขที่, หมู่, ถนน..." class="w-full p-2.5 border rounded-xl outline-none">
+                        </div>
+
+                        <div>
+                            <label class="block font-semibold text-slate-600 dark:text-slate-300 mb-1">ตำบล / แขวง</label>
+                            <input type="text" id="subdistrict" placeholder="เกาะแก้ว" class="w-full p-2.5 border rounded-xl outline-none">
+                        </div>
+                        <div>
+                            <label class="block font-semibold text-slate-600 dark:text-slate-300 mb-1">อำเภอ / เขต</label>
+                            <input type="text" id="district" placeholder="เสลภูมิ" class="w-full p-2.5 border rounded-xl outline-none">
+                        </div>
+                        <div>
+                            <label class="block font-semibold text-slate-600 dark:text-slate-300 mb-1">จังหวัด</label>
+                            <input type="text" id="province" placeholder="ร้อยเอ็ด" value="ร้อยเอ็ด" class="w-full p-2.5 border rounded-xl outline-none">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SECTION 4: ความเชี่ยวชาญ -->
+                <div class="bg-white p-6 rounded-2xl border border-slate-200/80 space-y-4">
+                    <h2 class="text-sm font-bold text-slate-800 dark:text-slate-100 flex items-center gap-2 pb-3 border-b border-slate-100 dark:border-slate-800">
+                        <i data-lucide="sparkles" class="w-4 h-4 text-amber-500"></i>
+                        4. ความเชี่ยวชาญเฉพาะทาง (Expertise)
+                    </h2>
+                    <div id="expertise-checkboxes" class="grid grid-cols-2 sm:grid-cols-3 gap-2 text-xs"></div>
+                </div>
+
+                <!-- Submit Button Bar -->
+                <div class="flex items-center justify-end gap-3 pt-2">
+                    <a href="personnel-list.html" class="px-5 py-2.5 text-xs font-semibold text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl transition-all">ยกเลิก</a>
+                    <button type="submit" id="save-btn" class="px-6 py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold rounded-xl shadow-sm transition-all flex items-center gap-2">
+                        <i data-lucide="save" class="w-4 h-4"></i>
+                        <span>บันทึกข้อมูลบุคลากร</span>
+                    </button>
+                </div>
+
+            </form>
+
+        </main>
+    </div>
+
+    <!-- Scripts -->
+    <script src="js/api.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/ui.js"></script>
+    <script src="js/components.js"></script>
+    <script>
+        /* global auth, apiClient, ui, renderLayout */
+        const urlParams = new URLSearchParams(window.location.search);
+        const editId = urlParams.get("id");
+        let allBranches = [];
+
+        if (typeof auth !== "undefined" && auth.requireAuth()) {
+            renderLayout(editId ? "personnel" : "personnel-add");
+            initForm();
+        }
+
+        async function initForm() {
+            await loadMasterOptions();
+
+            if (editId) {
+                const headEl = document.getElementById("form-heading");
+                if (headEl) headEl.innerText = "แก้ไขข้อมูลบุคลากร";
+                const breadEl = document.getElementById("form-title-breadcrumb");
+                if (breadEl) breadEl.innerText = "แก้ไขข้อมูลบุคลากร";
+                await loadExistingPersonnel(editId);
+            }
+
+            const pForm = document.getElementById("personnel-form");
+            if (pForm) pForm.addEventListener("submit", handleFormSubmit);
+        }
+
+        async function loadMasterOptions() {
+            try {
+                const [depts, branches, positions, types, expertises] = await Promise.all([
+                    apiClient.get("/departments"),
+                    apiClient.get("/branches"),
+                    apiClient.get("/positions"),
+                    apiClient.get("/personnel-types"),
+                    apiClient.get("/expertise")
+                ]);
+
+                allBranches = branches;
+
+                // Departments
+                const deptSelect = document.getElementById("department_id");
+                if (deptSelect) {
+                    deptSelect.innerHTML = `<option value="">- เลือกคณะ / หน่วยงาน -</option>`;
+                    depts.forEach(d => {
+                        const opt = document.createElement("option");
+                        opt.value = d.id;
+                        opt.textContent = d.name;
+                        deptSelect.appendChild(opt);
+                    });
+
+                    deptSelect.addEventListener("change", () => {
+                        filterBranchesByDept(deptSelect.value);
+                    });
+                }
+
+                // Positions
+                const posSelect = document.getElementById("position_id");
+                if (posSelect) {
+                    posSelect.innerHTML = `<option value="">- เลือกตำแหน่งงาน -</option>`;
+                    positions.forEach(p => {
+                        const opt = document.createElement("option");
+                        opt.value = p.id;
+                        opt.textContent = p.name;
+                        posSelect.appendChild(opt);
+                    });
+                }
+
+                // Personnel Types
+                const typeSelect = document.getElementById("personnel_type_id");
+                if (typeSelect) {
+                    typeSelect.innerHTML = `<option value="">- เลือกประเภทบุคลากร -</option>`;
+                    types.forEach(t => {
+                        const opt = document.createElement("option");
+                        opt.value = t.id;
+                        opt.textContent = t.name;
+                        typeSelect.appendChild(opt);
+                    });
+                }
+
+                // Expertise checkboxes
+                const expContainer = document.getElementById("expertise-checkboxes");
+                if (expContainer) {
+                    expContainer.innerHTML = "";
+                    expertises.forEach(e => {
+                        const label = document.createElement("label");
+                        label.className = "flex items-center gap-2 p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200/60 dark:border-slate-700/60 cursor-pointer hover:border-blue-300 transition-colors";
+                        label.innerHTML = `
+                            <input type="checkbox" name="expertise" value="${e.id}" class="rounded text-blue-600 focus:ring-blue-500">
+                            <span class="text-slate-700 dark:text-slate-200 font-medium">${e.name}</span>
+                        `;
+                        expContainer.appendChild(label);
+                    });
+                }
+
+                if (deptSelect) filterBranchesByDept(deptSelect.value);
+
+            } catch (err) {
+                ui.showToast(err.message, "error");
+            }
+        }
+
+        function filterBranchesByDept(deptId, selectedBranchId = null) {
+            const branchSelect = document.getElementById("branch_id");
+            if (!branchSelect) return;
+            branchSelect.innerHTML = `<option value="">- เลือกสาขาวิชา -</option>`;
+            
+            const filtered = deptId 
+                ? allBranches.filter(b => String(b.department_id) === String(deptId))
+                : allBranches;
+
+            filtered.forEach(b => {
+                const opt = document.createElement("option");
+                opt.value = String(b.id);
+                opt.textContent = b.name;
+                if (selectedBranchId && String(b.id) === String(selectedBranchId)) {
+                    opt.selected = true;
+                }
+                branchSelect.appendChild(opt);
+            });
+        }
+
+        async function loadExistingPersonnel(id) {
+            try {
+                if (typeof apiClient === "undefined") return;
+                const p = await apiClient.get(`/personnel/${id}`);
+                const setVal = (fieldId, val) => { 
+                    const el = document.getElementById(fieldId); 
+                    if (el) el.value = val || ''; 
+                };
+
+                setVal("prefix_th", p.prefix_th);
+                setVal("first_name_th", p.first_name_th);
+                setVal("last_name_th", p.last_name_th);
+                setVal("prefix_en", p.prefix_en);
+                setVal("first_name_en", p.first_name_en);
+                setVal("last_name_en", p.last_name_en);
+                setVal("citizen_id", p.citizen_id);
+                setVal("birth_date", p.birth_date);
+                setVal("gender", p.gender || 'ชาย');
+
+                setVal("personnel_code", p.personnel_code);
+                setVal("department_id", p.department_id);
+                filterBranchesByDept(p.department_id, p.branch_id);
+                setVal("position_id", p.position_id);
+                setVal("personnel_type_id", p.personnel_type_id);
+                setVal("work_status", p.work_status || 'ปฏิบัติงาน');
+                setVal("start_work_date", p.start_work_date);
+                setVal("appoint_date", p.appoint_date);
+
+                setVal("email", p.email);
+                setVal("phone", p.phone);
+                setVal("internal_phone", p.internal_phone);
+                setVal("address", p.address);
+                setVal("subdistrict", p.subdistrict);
+                setVal("district", p.district);
+                setVal("province", p.province || 'ร้อยเอ็ด');
+
+                if (p.expertise_list && Array.isArray(p.expertise_list)) {
+                    const ids = p.expertise_list.map(e => e.id);
+                    document.querySelectorAll("input[name='expertise']").forEach(cb => {
+                        const val = cb.getAttribute("value") || cb.value;
+                        if (ids.includes(parseInt(val, 10))) {
+                            cb.checked = true;
+                        }
+                    });
+                }
+            } catch (err) {
+                if (typeof ui !== "undefined" && ui.showToast) {
+                    ui.showToast(err.message, "error");
+                }
+            }
+        }
+
+        async function handleFormSubmit(e) {
+            e.preventDefault();
+
+            const getVal = (fieldId) => { 
+                const el = document.getElementById(fieldId); 
+                return el ? el.value.trim() : ""; 
+            };
+
+            const requiredFields = [
+                { id: "prefix_th", label: "คำนำหน้า (ไทย)" },
+                { id: "first_name_th", label: "ชื่อจริง (ไทย)" },
+                { id: "last_name_th", label: "นามสกุล (ไทย)" },
+                { id: "personnel_code", label: "รหัสบุคลากร" },
+                { id: "department_id", label: "คณะ / หน่วยงาน" },
+                { id: "position_id", label: "ตำแหน่งงาน" },
+                { id: "personnel_type_id", label: "ประเภทบุคลากร" },
+                { id: "email", label: "อีเมลทางการ" }
+            ];
+
+            for (const field of requiredFields) {
+                const val = getVal(field.id);
+                if (!val) {
+                    if (typeof ui !== "undefined" && ui.highlightError) {
+                        ui.highlightError(field.id, `กรุณาระบุ "${field.label}" ให้ครบถ้วน`);
+                    }
+                    return;
+                }
+            }
+
+            const btn = document.getElementById("save-btn");
+            if (btn) btn.setAttribute("disabled", "true");
+
+            const selectedExpertises = Array.from(document.querySelectorAll("input[name='expertise']:checked")).map(cb => {
+                const val = cb.getAttribute("value") || cb.value;
+                return parseInt(val, 10);
+            });
+
+            const payload = {
+                prefix_th: getVal("prefix_th"),
+                first_name_th: getVal("first_name_th"),
+                last_name_th: getVal("last_name_th"),
+                prefix_en: getVal("prefix_en") || null,
+                first_name_en: getVal("first_name_en") || null,
+                last_name_en: getVal("last_name_en") || null,
+                citizen_id: getVal("citizen_id") || null,
+                birth_date: getVal("birth_date") || null,
+                gender: getVal("gender"),
+                personnel_code: getVal("personnel_code"),
+                department_id: parseInt(getVal("department_id"), 10),
+                branch_id: getVal("branch_id") ? parseInt(getVal("branch_id"), 10) : null,
+                position_id: parseInt(getVal("position_id"), 10),
+                personnel_type_id: parseInt(getVal("personnel_type_id"), 10),
+                work_status: getVal("work_status"),
+                start_work_date: getVal("start_work_date") || null,
+                appoint_date: getVal("appoint_date") || null,
+                email: getVal("email"),
+                phone: getVal("phone") || null,
+                internal_phone: getVal("internal_phone") || null,
+                address: getVal("address") || null,
+                subdistrict: getVal("subdistrict") || null,
+                district: getVal("district") || null,
+                province: getVal("province") || null,
+                expertise_ids: selectedExpertises
+            };
+
+            try {
+                if (typeof apiClient === "undefined") throw new Error("API Client is not ready");
+                let targetId = editId;
+                if (editId) {
+                    await apiClient.put(`/personnel/${editId}`, payload);
+                    if (typeof ui !== "undefined" && ui.showToast) {
+                        ui.showToast("บันทึกการแก้ไขข้อมูลสำเร็จเรียบร้อย", "success");
+                    }
+                } else {
+                    const created = await apiClient.post("/personnel", payload);
+                    targetId = created.id;
+                    if (typeof ui !== "undefined" && ui.showToast) {
+                        ui.showToast("เพิ่มข้อมูลบุคลากรใหม่สำเร็จเรียบร้อย", "success");
+                    }
+                }
+
+                setTimeout(() => {
+                    window.location.href = `personnel-detail.html?id=${targetId}`;
+                }, 600);
+            } catch (err) {
+                if (typeof ui !== "undefined" && ui.showToast) {
+                    ui.showToast(err.message, "error");
+                }
+                if (btn) btn.removeAttribute("disabled");
+            }
+        }
+    </script>
+</body>
+</html>

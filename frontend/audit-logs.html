@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ประวัติการทำงาน (Audit Logs) - คณะเทคโนโลยีสารสนเทศ มรภ.ร้อยเอ็ด</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        window.tailwind = window.tailwind || {};
+        tailwind.config = {
+            darkMode: ['class', '[data-theme="dark"]'],
+        };
+    </script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link rel="stylesheet" href="css/style.css">
+    <script>
+        const theme = localStorage.getItem("theme") || (window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+        document.documentElement.setAttribute("data-theme", theme);
+    </script>
+</head>
+<body class="min-h-screen flex">
+
+    <aside id="sidebar" class="w-64 fixed inset-y-0 left-0 z-40 hidden lg:block transition-all"></aside>
+
+    <div class="flex-1 lg:ml-64 flex flex-col min-h-screen">
+        <header id="header"></header>
+
+        <main class="p-6 lg:p-8 flex-1 max-w-7xl w-full mx-auto space-y-6">
+            <div class="flex items-center justify-between">
+                <div>
+                    <h1 class="text-xl lg:text-2xl font-bold text-slate-800 dark:text-slate-100 tracking-tight">ประวัติการทำรายการ (Audit Logs)</h1>
+                    <p class="text-xs text-slate-400 mt-0.5">บันทึกกิจกรรมความปลอดภัย การเข้าสู่ระบบ และการแก้ไขข้อมูลในระบบ</p>
+                </div>
+            </div>
+
+            <!-- Filter Card -->
+            <div class="bg-white p-4 rounded-2xl border border-slate-200/80">
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                    <div>
+                        <select id="filter-action" class="w-full px-3 py-2 border rounded-xl text-xs outline-none">
+                            <option value="">ทุก Action (LOGIN, CREATE, UPDATE, DELETE...)</option>
+                            <option value="LOGIN">LOGIN (เข้าสู่ระบบ)</option>
+                            <option value="CREATE">CREATE (เพิ่มข้อมูล)</option>
+                            <option value="UPDATE">UPDATE (แก้ไขข้อมูล)</option>
+                            <option value="DELETE">DELETE (ลบข้อมูล)</option>
+                            <option value="EXPORT">EXPORT (ส่งออกรายงาน)</option>
+                            <option value="UPLOAD">UPLOAD (อัปโหลดไฟล์)</option>
+                        </select>
+                    </div>
+                    <div>
+                        <select id="filter-module" class="w-full px-3 py-2 border rounded-xl text-xs outline-none">
+                            <option value="">ทุก Module (AUTH, PERSONNEL, MASTER_DATA...)</option>
+                            <option value="AUTH">AUTH</option>
+                            <option value="PERSONNEL">PERSONNEL</option>
+                            <option value="MASTER_DATA">MASTER_DATA</option>
+                            <option value="REPORT">REPORT</option>
+                        </select>
+                    </div>
+                    <div>
+                        <input type="text" id="filter-username" placeholder="ค้นหาตามชื่อผู้ใช้..." class="w-full px-3 py-2 border rounded-xl text-xs outline-none">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Table -->
+            <div class="bg-white rounded-2xl border border-slate-200/80 overflow-hidden">
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left">
+                        <thead>
+                            <tr class="border-b text-[11px] font-semibold text-slate-400 uppercase tracking-wider">
+                                <th class="py-3 px-4">วันเวลา (Timestamp)</th>
+                                <th class="py-3 px-4">ผู้ใช้งาน</th>
+                                <th class="py-3 px-4">Action</th>
+                                <th class="py-3 px-4">Module</th>
+                                <th class="py-3 px-4">รายละเอียดการทำรายการ</th>
+                                <th class="py-3 px-4">IP Address</th>
+                            </tr>
+                        </thead>
+                        <tbody id="logs-table-body" class="divide-y divide-slate-100 dark:divide-slate-800 text-xs">
+                            <tr>
+                                <td colspan="6" class="py-12 text-center text-slate-400">กำลังโหลดข้อมูล...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="px-6 py-3.5 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-xs text-slate-400">
+                    <div id="logs-info"></div>
+                    <div id="logs-pagination" class="flex gap-1"></div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Scripts -->
+    <script src="js/api.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/ui.js"></script>
+    <script src="js/components.js"></script>
+    <script>
+        /* global auth, apiClient, ui, renderLayout */
+        let currentLogsPage = 1;
+        let searchTimeout = null;
+
+        if (typeof auth !== "undefined" && auth.requireAuth && auth.requireAuth(["ADMIN"])) {
+            renderLayout("audit-logs");
+            initAuditLogs();
+        }
+
+        async function initAuditLogs() {
+            await loadAuditLogs(1);
+
+            const filterAction = document.getElementById("filter-action");
+            if (filterAction) filterAction.addEventListener("change", () => loadAuditLogs(1));
+
+            const filterModule = document.getElementById("filter-module");
+            if (filterModule) filterModule.addEventListener("change", () => loadAuditLogs(1));
+
+            const filterUsername = document.getElementById("filter-username");
+            if (filterUsername) {
+                filterUsername.addEventListener("input", () => {
+                    clearTimeout(searchTimeout);
+                    searchTimeout = setTimeout(() => loadAuditLogs(1), 300);
+                });
+            }
+        }
+
+        async function loadAuditLogs(page = 1) {
+            currentLogsPage = page;
+            const actionEl = document.getElementById("filter-action");
+            const moduleEl = document.getElementById("filter-module");
+            const usernameEl = document.getElementById("filter-username");
+
+            const action = actionEl ? actionEl.value : "";
+            const module = moduleEl ? moduleEl.value : "";
+            const username = usernameEl ? usernameEl.value.trim() : "";
+
+            const tbody = document.getElementById("logs-table-body");
+            if (tbody) tbody.innerHTML = `<tr><td colspan="6" class="py-12 text-center text-slate-400 font-medium">กำลังโหลดข้อมูล...</td></tr>`;
+
+            try {
+                if (typeof apiClient === "undefined") return;
+                const res = await apiClient.get("/audit-logs", {
+                    page: currentLogsPage,
+                    page_size: 15,
+                    action,
+                    module,
+                    username
+                });
+
+                if (!tbody) return;
+
+                if (!res || !res.items || res.items.length === 0) {
+                    tbody.innerHTML = `<tr><td colspan="6" class="py-12 text-center text-slate-400">ไม่พบประวัติการทำรายการตามเงื่อนไขที่เลือก</td></tr>`;
+                    const infoEl = document.getElementById("logs-info");
+                    if (infoEl) infoEl.innerText = "";
+                    const pagEl = document.getElementById("logs-pagination");
+                    if (pagEl) pagEl.innerHTML = "";
+                    return;
+                }
+
+                tbody.innerHTML = res.items.map(log => {
+                    const actionColors = {
+                        LOGIN: "bg-blue-50 dark:bg-blue-950/40 text-blue-700 dark:text-blue-300 border-blue-200 dark:border-blue-800/40",
+                        CREATE: "bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300 border-emerald-200 dark:border-emerald-800/40",
+                        UPDATE: "bg-amber-50 dark:bg-amber-950/40 text-amber-700 dark:text-amber-300 border-amber-200 dark:border-amber-800/40",
+                        DELETE: "bg-rose-50 dark:bg-rose-950/40 text-rose-700 dark:text-rose-300 border-rose-200 dark:border-rose-800/40",
+                        EXPORT: "bg-purple-50 dark:bg-purple-950/40 text-purple-700 dark:text-purple-300 border-purple-200 dark:border-purple-800/40",
+                        UPLOAD: "bg-indigo-50 dark:bg-indigo-950/40 text-indigo-700 dark:text-indigo-300 border-indigo-200 dark:border-indigo-800/40"
+                    };
+                    const badgeClass = actionColors[log.action] || "bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-700";
+
+                    return `
+                        <tr class="transition-colors hover:bg-slate-50 dark:hover:bg-slate-800/50">
+                            <td class="py-3.5 px-4 font-mono text-slate-500 dark:text-slate-400 whitespace-nowrap">${new Date(log.created_at).toLocaleString('th-TH')}</td>
+                            <td class="py-3.5 px-4 font-semibold text-slate-800 dark:text-slate-100">${log.username}</td>
+                            <td class="py-3.5 px-4">
+                                <span class="px-2.5 py-0.5 border rounded-full text-[10px] font-semibold ${badgeClass}">${log.action}</span>
+                            </td>
+                            <td class="py-3.5 px-4 font-mono text-slate-500 dark:text-slate-400">${log.module}</td>
+                            <td class="py-3.5 px-4 text-slate-600 dark:text-slate-300 max-w-xs truncate" title="${log.description || ''}">${log.description || '-'}</td>
+                            <td class="py-3.5 px-4 font-mono text-slate-400">${log.ip_address || '-'}</td>
+                        </tr>
+                    `;
+                }).join("");
+
+                const infoEl = document.getElementById("logs-info");
+                if (infoEl) infoEl.innerText = `แสดงรายการ ${(res.page - 1) * res.page_size + 1} - ${Math.min(res.page * res.page_size, res.total)} จากทั้งหมด ${res.total} รายการ`;
+
+                let pagHtml = "";
+                if (res.total_pages > 1) {
+                    for (let i = 1; i <= res.total_pages; i++) {
+                        pagHtml += `
+                            <button type="button" onclick="loadAuditLogs(${i})" class="w-8 h-8 rounded-xl text-xs font-semibold transition-all ${
+                                i === res.page ? 'bg-blue-600 text-white shadow-xs' : 'border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300'
+                            }">${i}</button>
+                        `;
+                    }
+                }
+                const pagEl = document.getElementById("logs-pagination");
+                if (pagEl) pagEl.innerHTML = pagHtml;
+
+            } catch (err) {
+                if (typeof ui !== "undefined" && ui.showToast) {
+                    ui.showToast(err.message, "error");
+                }
+            }
+        }
+    </script>
+</body>
+</html>

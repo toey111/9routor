@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ระบบจัดเก็บข้อมูลบุคลากร คณะเทคโนโลยีสารสนเทศ</title>
+</head>
+<body style="background-color: #0f172a; color: white; display: flex; align-items: center; justify-content: center; height: 100vh; font-family: sans-serif;">
+    <p>กำลังนำท่านเข้าสู่ระบบ...</p>
+    <script src="js/auth.js"></script>
+    <script>
+        /* global auth */
+        if (typeof auth !== "undefined" && auth.isAuthenticated && auth.isAuthenticated()) {
+            const role = auth.getRole();
+            const user = auth.getUser();
+            if (role === "STAFF" && user && user.personnel_id) {
+                window.location.href = `personnel-detail.html?id=${user.personnel_id}`;
+            } else {
+                window.location.href = "dashboard.html";
+            }
+        } else {
+            window.location.href = "login.html";
+        }
+    </script>
+</body>
+</html>

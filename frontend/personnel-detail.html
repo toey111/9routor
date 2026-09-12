@@ -1,0 +1,1276 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ข้อมูลประวัติบุคลากร - คณะเทคโนโลยีสารสนเทศ มรภ.ร้อยเอ็ด</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        window.tailwind = window.tailwind || {};
+        tailwind.config = {
+            darkMode: ['class', '[data-theme="dark"]'],
+        };
+    </script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link rel="stylesheet" href="css/style.css">
+    <script>
+        const theme = localStorage.getItem("theme") || (window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+        document.documentElement.setAttribute("data-theme", theme);
+    </script>
+</head>
+<body class="min-h-screen flex bg-slate-50/70 dark:bg-[#070b14] text-slate-800 dark:text-slate-100 selection:bg-indigo-500 selection:text-white relative overflow-x-hidden">
+
+    <!-- Ambient Glowing Gradient Orbs for Depth & Wow Factor -->
+    <div class="fixed top-0 right-0 -z-10 w-[500px] h-[500px] bg-gradient-to-bl from-blue-600/10 via-indigo-500/10 to-transparent rounded-full blur-3xl pointer-events-none"></div>
+    <div class="fixed bottom-0 left-60 -z-10 w-[500px] h-[500px] bg-gradient-to-tr from-purple-600/10 via-pink-500/5 to-transparent rounded-full blur-3xl pointer-events-none"></div>
+
+    <!-- Sidebar Container -->
+    <aside id="sidebar" class="w-64 fixed inset-y-0 left-0 z-40 hidden lg:block transition-all"></aside>
+
+    <!-- Main Content Area -->
+    <div class="flex-1 lg:ml-64 flex flex-col min-h-screen">
+        <header id="header"></header>
+
+        <main class="p-4 sm:p-6 lg:p-8 flex-1 max-w-7xl w-full mx-auto space-y-6">
+
+            <!-- Breadcrumb & Top Action Bar -->
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 no-print">
+                <nav class="flex items-center gap-2 text-xs text-slate-400 font-medium">
+                    <a href="dashboard.html" class="hover:text-blue-500 flex items-center gap-1.5 transition-colors">
+                        <i data-lucide="layout-dashboard" class="w-3.5 h-3.5 text-blue-500"></i>
+                        <span>แดชบอร์ด</span>
+                    </a>
+                    <span>/</span>
+                    <a href="personnel-list.html" class="hover:text-blue-500 flex items-center gap-1.5 transition-colors">
+                        <i data-lucide="users" class="w-3.5 h-3.5 text-indigo-500"></i>
+                        <span>รายชื่อบุคลากร</span>
+                    </a>
+                    <span>/</span>
+                    <span class="text-blue-600 dark:text-blue-400 font-bold flex items-center gap-1" id="breadcrumb-name">
+                        <i data-lucide="user-check" class="w-3.5 h-3.5"></i>
+                        <span>ประวัติบุคลากร</span>
+                    </span>
+                </nav>
+
+                <!-- Top Quick Actions -->
+                <div class="flex items-center gap-2.5">
+                    <button type="button" onclick="copyProfileLink()" class="px-3.5 py-2 bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 rounded-xl text-xs font-semibold shadow-xs hover:shadow-sm transition-all flex items-center gap-2">
+                        <i data-lucide="share-2" class="w-3.5 h-3.5 text-indigo-500"></i>
+                        <span>แชร์โปรไฟล์</span>
+                    </button>
+                    <button type="button" onclick="window.print()" class="px-3.5 py-2 bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 rounded-xl text-xs font-semibold shadow-xs hover:shadow-sm transition-all flex items-center gap-2">
+                        <i data-lucide="printer" class="w-3.5 h-3.5 text-slate-500"></i>
+                        <span>พิมพ์ประวัติ</span>
+                    </button>
+                    <a id="btn-edit-profile" href="#" class="px-4 py-2 bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 text-white rounded-xl text-xs font-bold shadow-md shadow-indigo-500/25 hover:shadow-indigo-500/40 hover:scale-[1.02] active:scale-100 transition-all flex items-center gap-2">
+                        <i data-lucide="edit-3" class="w-3.5 h-3.5"></i>
+                        <span>แก้ไขข้อมูล</span>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Profile Grand Hero Card (Cyber/Modern Gradient, Glowing Rings, Dynamic Glass) -->
+            <div class="relative bg-white/90 dark:bg-slate-900/90 backdrop-blur-xl rounded-3xl border border-slate-200/90 dark:border-slate-800/90 shadow-xl shadow-slate-200/40 dark:shadow-none overflow-hidden print-card">
+                <!-- Glowing Mesh Cover Banner -->
+                <div class="h-36 sm:h-48 bg-gradient-to-r from-blue-700 via-indigo-600 to-purple-900 relative overflow-hidden flex items-start justify-between p-4 sm:p-6 text-white">
+                    <!-- Atmospheric Blurs & Geometric Matrix Patterns -->
+                    <div class="absolute -right-12 -top-12 w-64 h-64 bg-cyan-400/20 rounded-full blur-3xl pointer-events-none"></div>
+                    <div class="absolute -left-12 -bottom-12 w-64 h-64 bg-fuchsia-500/25 rounded-full blur-3xl pointer-events-none"></div>
+                    <div class="absolute inset-0 bg-[radial-gradient(#ffffff_1.2px,transparent_1.2px)] [background-size:20px_20px] opacity-20 pointer-events-none"></div>
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent pointer-events-none"></div>
+                    
+                    <div class="relative z-10 flex items-center gap-2">
+                        <span class="px-3.5 py-1.5 bg-white/15 backdrop-blur-md rounded-full text-xs font-bold border border-white/25 text-white flex items-center gap-2 shadow-lg">
+                            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+                            <span class="w-2 h-2 rounded-full bg-emerald-400 absolute"></span>
+                            คณะเทคโนโลยีสารสนเทศ • มหาวิทยาลัยราชภัฏร้อยเอ็ด
+                        </span>
+                    </div>
+
+                    <div class="relative z-10 hidden sm:flex items-center gap-2">
+                        <span class="px-3 py-1 bg-black/25 backdrop-blur-md rounded-xl text-[11px] font-mono text-blue-200 border border-white/10">
+                            FACULTY INFORMATION SYSTEM
+                        </span>
+                    </div>
+                </div>
+
+                <!-- Profile Info Section (Avatar Overlapping Banner) -->
+                <div class="px-6 pb-6 lg:px-8 lg:pb-8 pt-0 relative">
+                    <div class="flex flex-col md:flex-row items-center md:items-end justify-between gap-6 -mt-16 sm:-mt-20 mb-6">
+                        <div class="flex flex-col md:flex-row items-center md:items-end gap-6 text-center md:text-left">
+                            <!-- Avatar with Gradient Aura Halo & Verified Badge -->
+                            <div class="relative group flex-shrink-0">
+                                <div class="p-1 rounded-3xl bg-gradient-to-tr from-cyan-400 via-indigo-500 to-fuchsia-500 shadow-2xl shadow-indigo-500/30">
+                                    <img id="profile-avatar" src="images/default-avatar-white.svg"
+                                        alt="รูปภาพประจำตัวบุคลากร"
+                                        class="w-28 h-28 sm:w-36 sm:h-36 rounded-2xl object-cover bg-white dark:bg-slate-800 transition-transform duration-300 group-hover:scale-105">
+                                </div>
+                                <label for="avatar-file-input" class="no-print absolute inset-1 bg-slate-950/70 rounded-2xl flex flex-col items-center justify-center text-white opacity-0 group-hover:opacity-100 transition-all cursor-pointer text-xs font-bold backdrop-blur-xs">
+                                    <i data-lucide="camera" class="w-6 h-6 mb-1 text-cyan-300 animate-bounce"></i>
+                                    <span>เปลี่ยนรูปโปรไฟล์</span>
+                                </label>
+                                <input type="file" id="avatar-file-input" class="hidden" accept="image/jpeg,image/png,image/webp">
+                                
+                                <!-- Verified Online Status Beacon -->
+                                <div class="absolute -bottom-1 -right-1 w-6 h-6 bg-emerald-500 border-2 border-white dark:border-slate-900 rounded-full flex items-center justify-center shadow-md" title="สถานะ: ปฏิบัติงาน">
+                                    <i data-lucide="check" class="w-3.5 h-3.5 text-white"></i>
+                                </div>
+                            </div>
+
+                            <!-- Name & Status Badges -->
+                            <div class="pb-1 space-y-1.5">
+                                <div class="flex flex-wrap items-center justify-center md:justify-start gap-2">
+                                    <span id="profile-code" class="px-3.5 py-1 bg-slate-900 text-white dark:bg-white dark:text-slate-950 font-mono font-black text-xs rounded-xl shadow-sm tracking-wide">
+                                        IT-XXXX
+                                    </span>
+                                    <span id="profile-type" class="px-3.5 py-1 bg-gradient-to-r from-purple-500/10 to-indigo-500/10 text-purple-700 dark:text-purple-300 font-bold text-xs rounded-xl border border-purple-300/60 dark:border-purple-800/60">
+                                        พนักงานสายวิชาการ
+                                    </span>
+                                    <span id="profile-status" class="px-3 py-1 bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 font-bold text-xs rounded-xl border border-emerald-400/40 flex items-center gap-1.5">
+                                        <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                                        ปฏิบัติงาน
+                                    </span>
+                                </div>
+                                <h1 id="profile-name-th" class="text-2xl sm:text-3xl lg:text-4xl font-black tracking-tight bg-gradient-to-r from-slate-900 via-indigo-950 to-blue-900 dark:from-white dark:via-slate-100 dark:to-indigo-200 bg-clip-text text-transparent">
+                                    กำลังโหลดข้อมูล...
+                                </h1>
+                                <p id="profile-name-en" class="text-xs font-semibold text-slate-500 dark:text-slate-400 flex items-center justify-center md:justify-start gap-1.5">
+                                    <i data-lucide="globe" class="w-3.5 h-3.5 text-indigo-500"></i>
+                                    <span>-</span>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 4 High-Energy Executive Metric Cards -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5 pt-5 border-t border-slate-100 dark:border-slate-800/80">
+                        <!-- Tile 1: Academic Rank -->
+                        <div class="p-4 rounded-2xl bg-gradient-to-br from-blue-50/80 via-blue-50/30 to-indigo-50/40 dark:from-blue-950/40 dark:via-slate-900/60 dark:to-indigo-950/30 border border-blue-200/60 dark:border-blue-900/40 flex items-center gap-3.5 hover-card-lift shadow-xs">
+                            <div class="w-11 h-11 rounded-2xl bg-gradient-to-tr from-blue-600 to-indigo-600 text-white flex items-center justify-center flex-shrink-0 shadow-md shadow-blue-500/30">
+                                <i data-lucide="award" class="w-5 h-5"></i>
+                            </div>
+                            <div class="min-w-0">
+                                <span class="text-[11px] font-bold text-blue-600 dark:text-blue-400 uppercase tracking-wider block">ตำแหน่งงาน / วิชาการ</span>
+                                <span id="profile-position" class="font-bold text-xs text-slate-800 dark:text-slate-100 truncate block mt-0.5">-</span>
+                            </div>
+                        </div>
+
+                        <!-- Tile 2: Faculty Branch -->
+                        <div class="p-4 rounded-2xl bg-gradient-to-br from-indigo-50/80 via-indigo-50/30 to-purple-50/40 dark:from-indigo-950/40 dark:via-slate-900/60 dark:to-purple-950/30 border border-indigo-200/60 dark:border-indigo-900/40 flex items-center gap-3.5 hover-card-lift shadow-xs">
+                            <div class="w-11 h-11 rounded-2xl bg-gradient-to-tr from-indigo-600 to-purple-600 text-white flex items-center justify-center flex-shrink-0 shadow-md shadow-indigo-500/30">
+                                <i data-lucide="git-branch" class="w-5 h-5"></i>
+                            </div>
+                            <div class="min-w-0">
+                                <span class="text-[11px] font-bold text-indigo-600 dark:text-indigo-400 uppercase tracking-wider block">สังกัดสาขาวิชา</span>
+                                <span id="profile-branch" class="font-bold text-xs text-slate-800 dark:text-slate-100 truncate block mt-0.5">-</span>
+                            </div>
+                        </div>
+
+                        <!-- Tile 3: Direct Email -->
+                        <div class="p-4 rounded-2xl bg-gradient-to-br from-emerald-50/80 via-emerald-50/30 to-teal-50/40 dark:from-emerald-950/40 dark:via-slate-900/60 dark:to-teal-950/30 border border-emerald-200/60 dark:border-emerald-900/40 flex items-center gap-3.5 hover-card-lift shadow-xs">
+                            <div class="w-11 h-11 rounded-2xl bg-gradient-to-tr from-emerald-600 to-teal-600 text-white flex items-center justify-center flex-shrink-0 shadow-md shadow-emerald-500/30">
+                                <i data-lucide="mail" class="w-5 h-5"></i>
+                            </div>
+                            <div class="min-w-0">
+                                <span class="text-[11px] font-bold text-emerald-600 dark:text-emerald-400 uppercase tracking-wider block">อีเมลติดต่อ</span>
+                                <span id="profile-email" class="font-bold text-xs text-slate-800 dark:text-slate-100 truncate block mt-0.5">-</span>
+                            </div>
+                        </div>
+
+                        <!-- Tile 4: Phone / Extension -->
+                        <div class="p-4 rounded-2xl bg-gradient-to-br from-amber-50/80 via-amber-50/30 to-orange-50/40 dark:from-amber-950/40 dark:via-slate-900/60 dark:to-orange-950/30 border border-amber-200/60 dark:border-amber-900/40 flex items-center gap-3.5 hover-card-lift shadow-xs">
+                            <div class="w-11 h-11 rounded-2xl bg-gradient-to-tr from-amber-500 to-orange-500 text-white flex items-center justify-center flex-shrink-0 shadow-md shadow-amber-500/30">
+                                <i data-lucide="phone-call" class="w-5 h-5"></i>
+                            </div>
+                            <div class="min-w-0">
+                                <span class="text-[11px] font-bold text-amber-600 dark:text-amber-400 uppercase tracking-wider block">เบอร์โทรศัพท์</span>
+                                <span id="profile-phone-quick" class="font-bold text-xs text-slate-800 dark:text-slate-100 truncate block mt-0.5">-</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab Navigation (Modern Floating Capsule Bar) -->
+            <div class="flex items-center gap-2.5 overflow-x-auto pb-2 border-b border-slate-200/80 dark:border-slate-800/80 no-scrollbar no-print" id="tabs-bar">
+                <button type="button" onclick="switchTab('general')" id="tab-btn-general" class="tab-btn px-4 py-2.5 rounded-2xl font-bold text-xs transition-all bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 text-white shadow-lg shadow-indigo-500/25 whitespace-nowrap flex-shrink-0 flex items-center gap-2">
+                    <i data-lucide="user" class="w-4 h-4"></i>
+                    <span>ข้อมูลทั่วไปและการติดต่อ</span>
+                </button>
+                <button type="button" onclick="switchTab('education')" id="tab-btn-education" class="tab-btn px-4 py-2.5 rounded-2xl font-semibold text-xs transition-all bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/80 hover:text-indigo-600 whitespace-nowrap flex-shrink-0 flex items-center gap-2">
+                    <i data-lucide="graduation-cap" class="w-4 h-4 text-indigo-500"></i>
+                    <span>ประวัติการศึกษา</span>
+                </button>
+                <button type="button" onclick="switchTab('academic')" id="tab-btn-academic" class="tab-btn px-4 py-2.5 rounded-2xl font-semibold text-xs transition-all bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/80 hover:text-amber-600 whitespace-nowrap flex-shrink-0 flex items-center gap-2">
+                    <i data-lucide="award" class="w-4 h-4 text-amber-500"></i>
+                    <span>ตำแหน่งทางวิชาการ</span>
+                </button>
+                <button type="button" onclick="switchTab('experience')" id="tab-btn-experience" class="tab-btn px-4 py-2.5 rounded-2xl font-semibold text-xs transition-all bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/80 hover:text-emerald-600 whitespace-nowrap flex-shrink-0 flex items-center gap-2">
+                    <i data-lucide="briefcase" class="w-4 h-4 text-emerald-500"></i>
+                    <span>ประวัติการทำงาน</span>
+                </button>
+                <button type="button" onclick="switchTab('research')" id="tab-btn-research" class="tab-btn px-4 py-2.5 rounded-2xl font-semibold text-xs transition-all bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/80 hover:text-purple-600 whitespace-nowrap flex-shrink-0 flex items-center gap-2">
+                    <i data-lucide="book-open" class="w-4 h-4 text-purple-500"></i>
+                    <span>งานวิจัยและสิ่งตีพิมพ์</span>
+                </button>
+                <button type="button" onclick="switchTab('trainings')" id="tab-btn-trainings" class="tab-btn px-4 py-2.5 rounded-2xl font-semibold text-xs transition-all bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/80 hover:text-rose-600 whitespace-nowrap flex-shrink-0 flex items-center gap-2">
+                    <i data-lucide="sparkles" class="w-4 h-4 text-rose-500"></i>
+                    <span>ประวัติการอบรม</span>
+                </button>
+            </div>
+
+            <!-- TAB 1: General & Contact Info (Rich Cards, Gradient Icons, Data Tiles) -->
+            <div id="tab-content-general" class="tab-content space-y-6">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Personal Info Card -->
+                    <div class="bg-white dark:bg-slate-900 p-6 rounded-3xl border border-slate-200/90 dark:border-slate-800 shadow-sm space-y-4">
+                        <div class="flex items-center gap-3 pb-3 border-b border-slate-100 dark:border-slate-800">
+                            <div class="w-10 h-10 rounded-2xl bg-blue-500/10 text-blue-600 dark:text-blue-400 flex items-center justify-center font-bold">
+                                <i data-lucide="user" class="w-5 h-5"></i>
+                            </div>
+                            <div>
+                                <h2 class="text-sm font-bold text-slate-800 dark:text-slate-100">ข้อมูลส่วนบุคคล</h2>
+                                <p class="text-[11px] text-slate-400">Personal Identity & Demographics</p>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                            <div class="p-3.5 rounded-2xl bg-slate-50/80 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-700/50">
+                                <div class="flex items-center gap-2 text-slate-400 mb-1">
+                                    <i data-lucide="credit-card" class="w-3.5 h-3.5 text-blue-500"></i>
+                                    <span class="text-[11px] font-semibold">เลขประจำตัวประชาชน</span>
+                                </div>
+                                <span id="info-citizen-id" class="font-bold text-slate-800 dark:text-slate-100 font-mono text-xs block">-</span>
+                            </div>
+
+                            <div class="p-3.5 rounded-2xl bg-slate-50/80 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-700/50">
+                                <div class="flex items-center gap-2 text-slate-400 mb-1">
+                                    <i data-lucide="calendar" class="w-3.5 h-3.5 text-indigo-500"></i>
+                                    <span class="text-[11px] font-semibold">วันเดือนปีเกิด</span>
+                                </div>
+                                <span id="info-birth-date" class="font-bold text-slate-800 dark:text-slate-100 text-xs block">-</span>
+                            </div>
+
+                            <div class="p-3.5 rounded-2xl bg-slate-50/80 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-700/50">
+                                <div class="flex items-center gap-2 text-slate-400 mb-1">
+                                    <i data-lucide="user-check" class="w-3.5 h-3.5 text-emerald-500"></i>
+                                    <span class="text-[11px] font-semibold">เพศ / สัญชาติ</span>
+                                </div>
+                                <span id="info-gender-nat" class="font-bold text-slate-800 dark:text-slate-100 text-xs block">-</span>
+                            </div>
+
+                            <div class="p-3.5 rounded-2xl bg-slate-50/80 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-700/50">
+                                <div class="flex items-center gap-2 text-slate-400 mb-1">
+                                    <i data-lucide="heart" class="w-3.5 h-3.5 text-rose-500"></i>
+                                    <span class="text-[11px] font-semibold">ศาสนา / สถานภาพ</span>
+                                </div>
+                                <span id="info-rel-marital" class="font-bold text-slate-800 dark:text-slate-100 text-xs block">-</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Work Info Card -->
+                    <div class="bg-white dark:bg-slate-900 p-6 rounded-3xl border border-slate-200/90 dark:border-slate-800 shadow-sm space-y-4">
+                        <div class="flex items-center gap-3 pb-3 border-b border-slate-100 dark:border-slate-800">
+                            <div class="w-10 h-10 rounded-2xl bg-purple-500/10 text-purple-600 dark:text-purple-400 flex items-center justify-center font-bold">
+                                <i data-lucide="briefcase" class="w-5 h-5"></i>
+                            </div>
+                            <div>
+                                <h2 class="text-sm font-bold text-slate-800 dark:text-slate-100">ข้อมูลการปฏิบัติงาน</h2>
+                                <p class="text-[11px] text-slate-400">Department & Official Placement</p>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                            <div class="p-3.5 rounded-2xl bg-slate-50/80 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-700/50">
+                                <div class="flex items-center gap-2 text-slate-400 mb-1">
+                                    <i data-lucide="building" class="w-3.5 h-3.5 text-purple-500"></i>
+                                    <span class="text-[11px] font-semibold">สังกัดคณะ</span>
+                                </div>
+                                <span id="info-dept" class="font-bold text-slate-800 dark:text-slate-100 text-xs block">-</span>
+                            </div>
+
+                            <div class="p-3.5 rounded-2xl bg-slate-50/80 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-700/50">
+                                <div class="flex items-center gap-2 text-slate-400 mb-1">
+                                    <i data-lucide="layers" class="w-3.5 h-3.5 text-blue-500"></i>
+                                    <span class="text-[11px] font-semibold">สาขาวิชา</span>
+                                </div>
+                                <span id="info-branch" class="font-bold text-slate-800 dark:text-slate-100 text-xs block">-</span>
+                            </div>
+
+                            <div class="p-3.5 rounded-2xl bg-slate-50/80 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-700/50">
+                                <div class="flex items-center gap-2 text-slate-400 mb-1">
+                                    <i data-lucide="calendar-check" class="w-3.5 h-3.5 text-emerald-500"></i>
+                                    <span class="text-[11px] font-semibold">วันที่เริ่มงาน / บรรจุ</span>
+                                </div>
+                                <span id="info-appoint-date" class="font-bold text-slate-800 dark:text-slate-100 text-xs block">-</span>
+                            </div>
+
+                            <div class="p-3.5 rounded-2xl bg-slate-50/80 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-700/50">
+                                <div class="flex items-center gap-2 text-slate-400 mb-1">
+                                    <i data-lucide="phone-forwarded" class="w-3.5 h-3.5 text-amber-500"></i>
+                                    <span class="text-[11px] font-semibold">เบอร์โทรศัพท์ภายใน</span>
+                                </div>
+                                <span id="info-internal-phone" class="font-bold text-slate-800 dark:text-slate-100 font-mono text-xs block">-</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Contact & Address Card -->
+                <div class="bg-white dark:bg-slate-900 p-6 rounded-3xl border border-slate-200/90 dark:border-slate-800 shadow-sm space-y-4">
+                    <div class="flex items-center gap-3 pb-3 border-b border-slate-100 dark:border-slate-800">
+                        <div class="w-10 h-10 rounded-2xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 flex items-center justify-center font-bold">
+                            <i data-lucide="map-pin" class="w-5 h-5"></i>
+                        </div>
+                        <div>
+                            <h2 class="text-sm font-bold text-slate-800 dark:text-slate-100">ข้อมูลการติดต่อและที่อยู่</h2>
+                            <p class="text-[11px] text-slate-400">Direct Contact Channels & Official Address</p>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
+                        <div class="p-4 rounded-2xl bg-slate-50/80 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-700/50 flex flex-col justify-between">
+                            <div>
+                                <div class="flex items-center gap-2 text-slate-400 mb-1.5">
+                                    <i data-lucide="mail" class="w-3.5 h-3.5 text-emerald-500"></i>
+                                    <span class="text-[11px] font-semibold">อีเมลหลัก</span>
+                                </div>
+                                <span id="info-email" class="font-bold text-slate-800 dark:text-slate-100 text-xs block break-all">-</span>
+                            </div>
+                        </div>
+
+                        <div class="p-4 rounded-2xl bg-slate-50/80 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-700/50 flex flex-col justify-between">
+                            <div>
+                                <div class="flex items-center gap-2 text-slate-400 mb-1.5">
+                                    <i data-lucide="smartphone" class="w-3.5 h-3.5 text-blue-500"></i>
+                                    <span class="text-[11px] font-semibold">เบอร์โทรศัพท์มือถือ</span>
+                                </div>
+                                <span id="info-phone" class="font-bold text-slate-800 dark:text-slate-100 text-xs block">-</span>
+                            </div>
+                        </div>
+
+                        <div class="p-4 rounded-2xl bg-slate-50/80 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-700/50 flex flex-col justify-between">
+                            <div>
+                                <div class="flex items-center gap-2 text-slate-400 mb-1.5">
+                                    <i data-lucide="home" class="w-3.5 h-3.5 text-indigo-500"></i>
+                                    <span class="text-[11px] font-semibold">ที่อยู่ปัจจุบัน</span>
+                                </div>
+                                <span id="info-address" class="font-bold text-slate-800 dark:text-slate-100 text-xs block">-</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Expertise Card -->
+                <div class="bg-white dark:bg-slate-900 p-6 rounded-3xl border border-slate-200/90 dark:border-slate-800 shadow-sm space-y-4">
+                    <div class="flex items-center gap-3 pb-3 border-b border-slate-100 dark:border-slate-800">
+                        <div class="w-10 h-10 rounded-2xl bg-amber-500/10 text-amber-600 dark:text-amber-400 flex items-center justify-center font-bold">
+                            <i data-lucide="sparkles" class="w-5 h-5"></i>
+                        </div>
+                        <div>
+                            <h2 class="text-sm font-bold text-slate-800 dark:text-slate-100">ความเชี่ยวชาญและความถนัดเฉพาะทาง (Expertise)</h2>
+                            <p class="text-[11px] text-slate-400">Academic & Technical Specializations</p>
+                        </div>
+                    </div>
+                    <div id="expertise-badges" class="flex flex-wrap gap-2.5">
+                        <span class="text-slate-400 text-xs">ไม่มีข้อมูลความเชี่ยวชาญ</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB 2: Education (Timeline & Rich Cards) -->
+            <div id="tab-content-education" class="tab-content hidden space-y-4">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <h2 class="text-sm font-bold text-slate-800 dark:text-slate-100">ประวัติการศึกษา</h2>
+                        <p class="text-[11px] text-slate-400">Degrees & Academic Credentials</p>
+                    </div>
+                    <button type="button" onclick="openAddEducationModal()" class="px-4 py-2 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white rounded-xl text-xs font-bold shadow-md shadow-blue-500/20 transition-all no-print flex items-center gap-1.5">
+                        <i data-lucide="plus" class="w-4 h-4"></i>
+                        <span>เพิ่มประวัติการศึกษา</span>
+                    </button>
+                </div>
+                <div id="education-list" class="space-y-3.5"></div>
+            </div>
+
+            <!-- TAB 3: Academic Position -->
+            <div id="tab-content-academic" class="tab-content hidden space-y-4">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <h2 class="text-sm font-bold text-slate-800 dark:text-slate-100">ตำแหน่งทางวิชาการ</h2>
+                        <p class="text-[11px] text-slate-400">Academic Ranks & Royal Appointments</p>
+                    </div>
+                    <button type="button" onclick="openAddAcademicModal()" class="px-4 py-2 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white rounded-xl text-xs font-bold shadow-md shadow-indigo-500/20 transition-all no-print flex items-center gap-1.5">
+                        <i data-lucide="plus" class="w-4 h-4"></i>
+                        <span>เพิ่มตำแหน่งทางวิชาการ</span>
+                    </button>
+                </div>
+                <div id="academic-list" class="space-y-3.5"></div>
+            </div>
+
+            <!-- TAB 4: Work Experience -->
+            <div id="tab-content-experience" class="tab-content hidden space-y-4">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <h2 class="text-sm font-bold text-slate-800 dark:text-slate-100">ประวัติการทำงาน</h2>
+                        <p class="text-[11px] text-slate-400">Career History & Work Background</p>
+                    </div>
+                    <button type="button" onclick="openAddWorkModal()" class="px-4 py-2 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white rounded-xl text-xs font-bold shadow-md shadow-emerald-500/20 transition-all no-print flex items-center gap-1.5">
+                        <i data-lucide="plus" class="w-4 h-4"></i>
+                        <span>เพิ่มประวัติการทำงาน</span>
+                    </button>
+                </div>
+                <div id="work-list" class="space-y-3.5"></div>
+            </div>
+
+            <!-- TAB 5: Research & Publications -->
+            <div id="tab-content-research" class="tab-content hidden space-y-6">
+                <!-- Researches -->
+                <div class="space-y-4">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <h2 class="text-sm font-bold text-slate-800 dark:text-slate-100">ผลงานวิจัย</h2>
+                            <p class="text-[11px] text-slate-400">Funded Research Projects & Grants</p>
+                        </div>
+                        <button type="button" onclick="openAddResearchModal()" class="px-4 py-2 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white rounded-xl text-xs font-bold shadow-md shadow-blue-500/20 transition-all no-print flex items-center gap-1.5">
+                            <i data-lucide="plus" class="w-4 h-4"></i>
+                            <span>เพิ่มผลงานวิจัย</span>
+                        </button>
+                    </div>
+                    <div id="research-list" class="space-y-3.5"></div>
+                </div>
+
+                <!-- Publications -->
+                <div class="space-y-4 pt-6 border-t border-slate-200/80 dark:border-slate-800/80">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <h2 class="text-sm font-bold text-slate-800 dark:text-slate-100">ผลงานตีพิมพ์ทางวิชาการ (Publications)</h2>
+                            <p class="text-[11px] text-slate-400">Journals & Conference Proceedings</p>
+                        </div>
+                        <button type="button" onclick="openAddPublicationModal()" class="px-4 py-2 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white rounded-xl text-xs font-bold shadow-md shadow-purple-500/20 transition-all no-print flex items-center gap-1.5">
+                            <i data-lucide="plus" class="w-4 h-4"></i>
+                            <span>เพิ่มผลงานตีพิมพ์</span>
+                        </button>
+                    </div>
+                    <div id="publication-list" class="space-y-3.5"></div>
+                </div>
+            </div>
+
+            <!-- TAB 6: Trainings -->
+            <div id="tab-content-trainings" class="tab-content hidden space-y-4">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <h2 class="text-sm font-bold text-slate-800 dark:text-slate-100">ประวัติการฝึกอบรมและสัมมนา</h2>
+                        <p class="text-[11px] text-slate-400">Certificates & Professional Development</p>
+                    </div>
+                    <button type="button" onclick="openAddTrainingModal()" class="px-4 py-2 bg-gradient-to-r from-rose-600 to-pink-600 hover:from-rose-500 hover:to-pink-500 text-white rounded-xl text-xs font-bold shadow-md shadow-rose-500/20 transition-all no-print flex items-center gap-1.5">
+                        <i data-lucide="plus" class="w-4 h-4"></i>
+                        <span>เพิ่มประวัติการอบรม</span>
+                    </button>
+                </div>
+                <div id="training-list" class="space-y-3.5"></div>
+            </div>
+
+        </main>
+    </div>
+
+    <!-- Scripts -->
+    <script src="js/api.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/ui.js"></script>
+    <script src="js/components.js"></script>
+    <script>
+        /* global auth, apiClient, ui, lucide, renderLayout */
+        const urlParams = new URLSearchParams(window.location.search);
+        let personnelId = urlParams.get("id");
+        const currentUser = auth.getUser();
+        const currentRole = auth.getRole();
+
+        // If no ID passed, check if STAFF viewing their own
+        if (!personnelId && currentRole === "STAFF" && currentUser?.personnel_id) {
+            personnelId = currentUser.personnel_id;
+        }
+
+        if (auth.requireAuth()) {
+            renderLayout(currentRole === "STAFF" ? "my-profile" : "personnel");
+            if (personnelId) {
+                loadPersonnelDetail();
+                setupAvatarUpload();
+            } else {
+                ui.showToast("ไม่พบรหัสบุคลากรที่ระบุ", "error");
+            }
+        }
+
+        function copyProfileLink() {
+            navigator.clipboard.writeText(window.location.href);
+            ui.showToast("คัดลอกลิงก์โปรไฟล์ไปยังคลิปบอร์ดแล้ว", "success");
+        }
+
+        async function loadPersonnelDetail() {
+            try {
+                const p = await apiClient.get(`/personnel/${personnelId}`);
+                renderProfileData(p);
+            } catch (err) {
+                ui.showToast(err.message, "error");
+            }
+        }
+
+        function renderProfileData(p) {
+            document.title = `${p.full_name_th} - ข้อมูลประวัติบุคลากร`;
+            document.getElementById("breadcrumb-name").innerHTML = `
+                <i data-lucide="user-check" class="w-3.5 h-3.5 inline text-blue-500"></i>
+                <span>${p.full_name_th}</span>
+            `;
+            document.getElementById("profile-name-th").innerText = p.full_name_th;
+            document.getElementById("profile-name-en").innerHTML = `
+                <i data-lucide="globe" class="w-3.5 h-3.5 text-indigo-500 inline mr-1"></i>
+                <span>${p.full_name_en || '-'}</span>
+            `;
+            document.getElementById("profile-code").innerText = p.personnel_code;
+            document.getElementById("profile-type").innerText = p.personnel_type_name || 'พนักงานมหาวิทยาลัย';
+            document.getElementById("profile-position").innerText = p.position_name || '-';
+            document.getElementById("profile-branch").innerText = p.branch_name || '-';
+            document.getElementById("profile-email").innerText = p.email || '-';
+
+            const editBtn = document.getElementById("btn-edit-profile");
+            if (editBtn) editBtn.href = `personnel-form.html?id=${p.id}`;
+
+            if (p.avatar_url) {
+                document.getElementById("profile-avatar").src = p.avatar_url;
+            }
+
+            // General Info
+            document.getElementById("info-citizen-id").innerText = p.citizen_id || '-';
+            document.getElementById("info-birth-date").innerText = ui.formatDateThai(p.birth_date);
+            document.getElementById("info-gender-nat").innerText = `${p.gender || '-'} / ${p.nationality || 'ไทย'}`;
+            document.getElementById("info-rel-marital").innerText = `${p.religion || 'พุทธ'} / ${p.marital_status || '-'}`;
+
+            document.getElementById("info-dept").innerText = p.department_name || '-';
+            document.getElementById("info-branch").innerText = p.branch_name || '-';
+            document.getElementById("info-appoint-date").innerText = ui.formatDateThai(p.appoint_date || p.start_work_date);
+            document.getElementById("info-internal-phone").innerText = p.internal_phone || '-';
+
+            document.getElementById("info-email").innerText = p.email || '-';
+            document.getElementById("info-phone").innerText = p.phone || '-';
+            const phoneQuick = document.getElementById("profile-phone-quick");
+            if (phoneQuick) phoneQuick.innerText = p.phone || (p.internal_phone ? `ต่อ ${p.internal_phone}` : '-');
+            
+            const addrParts = [p.address, p.subdistrict, p.district, p.province, p.zipcode].filter(Boolean);
+            document.getElementById("info-address").innerText = addrParts.length > 0 ? addrParts.join(" ") : '-';
+
+            // Expertise
+            const expContainer = document.getElementById("expertise-badges");
+            if (p.expertise_list && p.expertise_list.length > 0) {
+                expContainer.innerHTML = p.expertise_list.map(e => `
+                    <span class="px-4 py-2 bg-gradient-to-r from-amber-500/10 via-orange-500/10 to-amber-500/15 text-amber-900 dark:text-amber-200 border border-amber-300 dark:border-amber-700/50 rounded-2xl text-xs font-bold flex items-center gap-2 shadow-xs hover:scale-105 transition-all">
+                        <i data-lucide="sparkles" class="w-3.5 h-3.5 text-amber-500"></i>
+                        <span>${e.name}</span>
+                    </span>
+                `).join("");
+            } else {
+                expContainer.innerHTML = `<span class="text-slate-400 text-xs">ไม่มีข้อมูลความเชี่ยวชาญ</span>`;
+            }
+
+            // Sublists
+            renderEducationList(p.educations);
+            renderAcademicList(p.academic_positions);
+            renderWorkList(p.work_experiences);
+            renderResearchList(p.researches);
+            renderPublicationList(p.publications);
+            renderTrainingList(p.trainings);
+
+            lucide.createIcons();
+        }
+
+        function switchTab(tabId) {
+            document.querySelectorAll(".tab-content").forEach(el => el.classList.add("hidden"));
+            document.querySelectorAll(".tab-btn").forEach(btn => {
+                btn.className = "tab-btn px-4 py-2.5 rounded-2xl font-semibold text-xs transition-all bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/80 hover:text-indigo-600 whitespace-nowrap flex-shrink-0 flex items-center gap-2";
+            });
+
+            const targetContent = document.getElementById(`tab-content-${tabId}`);
+            if (targetContent) targetContent.classList.remove("hidden");
+            const activeBtn = document.getElementById(`tab-btn-${tabId}`);
+            if (activeBtn) {
+                activeBtn.className = "tab-btn px-4 py-2.5 rounded-2xl font-bold text-xs transition-all bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 text-white shadow-lg shadow-indigo-500/25 whitespace-nowrap flex-shrink-0 flex items-center gap-2";
+            }
+            if (typeof lucide !== "undefined" && lucide.createIcons) lucide.createIcons();
+        }
+
+        // Sub-list Renderers
+        function renderEducationList(items) {
+            const c = document.getElementById("education-list");
+            if (!items || items.length === 0) {
+                c.innerHTML = `
+                    <div class="p-8 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 text-center">
+                        <div class="w-12 h-12 rounded-2xl bg-blue-500/10 text-blue-500 flex items-center justify-center mx-auto mb-2">
+                            <i data-lucide="graduation-cap" class="w-6 h-6"></i>
+                        </div>
+                        <p class="text-xs text-slate-400 font-medium">ยังไม่มีข้อมูลประวัติการศึกษา</p>
+                    </div>
+                `;
+                if (typeof lucide !== "undefined" && lucide.createIcons) lucide.createIcons();
+                return;
+            }
+            c.innerHTML = items.map(item => `
+                <div class="bg-white dark:bg-slate-900 p-5 rounded-3xl border border-slate-200/90 dark:border-slate-800 shadow-sm hover:border-indigo-400 dark:hover:border-indigo-600/80 transition-all flex items-center justify-between gap-4 hover-card-lift">
+                    <div class="flex items-start gap-4">
+                        <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-blue-600 to-indigo-600 text-white flex items-center justify-center flex-shrink-0 shadow-md shadow-blue-500/30 mt-0.5">
+                            <i data-lucide="graduation-cap" class="w-6 h-6"></i>
+                        </div>
+                        <div>
+                            <div class="flex items-center gap-2 mb-1.5">
+                                <span class="px-2.5 py-0.5 bg-blue-50 dark:bg-blue-950/50 text-blue-700 dark:text-blue-300 text-[10px] font-bold rounded-lg border border-blue-200 dark:border-blue-800/50">${item.degree_level}</span>
+                                <span class="px-2.5 py-0.5 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 text-[10px] font-mono font-bold rounded-lg">ปีที่สำเร็จการศึกษา: พ.ศ. ${item.graduation_year}</span>
+                            </div>
+                            <h3 class="font-bold text-sm text-slate-900 dark:text-slate-100">${item.degree_name} (${item.field_of_study})</h3>
+                            <p class="text-xs text-slate-500 dark:text-slate-400 mt-1 flex items-center gap-1.5">
+                                <i data-lucide="map-pin" class="w-3.5 h-3.5 text-indigo-500"></i>
+                                <span>${item.institution}, ${item.country}</span>
+                            </p>
+                        </div>
+                    </div>
+                    <button type="button" onclick="deleteSubItem('/education/${item.id}')" class="p-2 text-slate-400 hover:text-rose-500 hover:bg-rose-50 dark:hover:bg-slate-800 rounded-xl transition-colors no-print flex-shrink-0" title="ลบรายการ">
+                        <i data-lucide="trash-2" class="w-4 h-4"></i>
+                    </button>
+                </div>
+            `).join("");
+            if (typeof lucide !== "undefined" && lucide.createIcons) lucide.createIcons();
+        }
+
+        function renderAcademicList(items) {
+            const c = document.getElementById("academic-list");
+            if (!items || items.length === 0) {
+                c.innerHTML = `
+                    <div class="p-8 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 text-center">
+                        <div class="w-12 h-12 rounded-2xl bg-indigo-500/10 text-indigo-500 flex items-center justify-center mx-auto mb-2">
+                            <i data-lucide="award" class="w-6 h-6"></i>
+                        </div>
+                        <p class="text-xs text-slate-400 font-medium">ยังไม่มีข้อมูลตำแหน่งทางวิชาการ</p>
+                    </div>
+                `;
+                if (typeof lucide !== "undefined" && lucide.createIcons) lucide.createIcons();
+                return;
+            }
+            c.innerHTML = items.map(item => `
+                <div class="bg-white dark:bg-slate-900 p-5 rounded-3xl border border-slate-200/90 dark:border-slate-800 shadow-sm hover:border-indigo-400 dark:hover:border-indigo-600/80 transition-all flex items-center justify-between gap-4 hover-card-lift">
+                    <div class="flex items-start gap-4">
+                        <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-indigo-600 to-purple-600 text-white flex items-center justify-center flex-shrink-0 shadow-md shadow-indigo-500/30 mt-0.5">
+                            <i data-lucide="award" class="w-6 h-6"></i>
+                        </div>
+                        <div>
+                            <div class="flex items-center gap-2 mb-1.5">
+                                <span class="px-2.5 py-0.5 bg-indigo-50 dark:bg-indigo-950/50 text-indigo-700 dark:text-indigo-300 text-[10px] font-bold rounded-lg border border-indigo-200 dark:border-indigo-800/50">คำสั่งแต่งตั้ง</span>
+                                <span class="px-2.5 py-0.5 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 text-[10px] font-semibold rounded-lg">เลขที่คำสั่ง: ${item.order_number || '-'}</span>
+                            </div>
+                            <h3 class="font-bold text-sm text-slate-900 dark:text-slate-100">${item.position_title}</h3>
+                            <p class="text-xs text-slate-500 dark:text-slate-400 mt-1 flex items-center gap-1.5">
+                                <i data-lucide="calendar" class="w-3.5 h-3.5 text-indigo-500"></i>
+                                <span>วันที่ได้รับการแต่งตั้ง: <strong class="text-slate-800 dark:text-slate-200">${ui.formatDateThai(item.appointed_date)}</strong></span>
+                            </p>
+                        </div>
+                    </div>
+                    <button type="button" onclick="deleteSubItem('/academic-position/${item.id}')" class="p-2 text-slate-400 hover:text-rose-500 hover:bg-rose-50 dark:hover:bg-slate-800 rounded-xl transition-colors no-print flex-shrink-0" title="ลบรายการ">
+                        <i data-lucide="trash-2" class="w-4 h-4"></i>
+                    </button>
+                </div>
+            `).join("");
+            if (typeof lucide !== "undefined" && lucide.createIcons) lucide.createIcons();
+        }
+
+        function renderWorkList(items) {
+            const c = document.getElementById("work-list");
+            if (!items || items.length === 0) {
+                c.innerHTML = `
+                    <div class="p-8 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 text-center">
+                        <div class="w-12 h-12 rounded-2xl bg-emerald-500/10 text-emerald-500 flex items-center justify-center mx-auto mb-2">
+                            <i data-lucide="briefcase" class="w-6 h-6"></i>
+                        </div>
+                        <p class="text-xs text-slate-400 font-medium">ยังไม่มีข้อมูลประวัติการทำงาน</p>
+                    </div>
+                `;
+                if (typeof lucide !== "undefined" && lucide.createIcons) lucide.createIcons();
+                return;
+            }
+            c.innerHTML = items.map(item => `
+                <div class="bg-white dark:bg-slate-900 p-5 rounded-3xl border border-slate-200/90 dark:border-slate-800 shadow-sm hover:border-emerald-400 dark:hover:border-emerald-600/80 transition-all flex items-start justify-between gap-4 hover-card-lift">
+                    <div class="flex items-start gap-4">
+                        <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-emerald-600 to-teal-600 text-white flex items-center justify-center flex-shrink-0 shadow-md shadow-emerald-500/30 mt-0.5">
+                            <i data-lucide="briefcase" class="w-6 h-6"></i>
+                        </div>
+                        <div>
+                            <div class="flex items-center gap-2 mb-1.5">
+                                <span class="px-2.5 py-0.5 bg-emerald-50 dark:bg-emerald-950/50 text-emerald-700 dark:text-emerald-300 text-[10px] font-bold rounded-lg border border-emerald-200 dark:border-emerald-800/50">ระยะเวลาปฏิบัติงาน</span>
+                                <span class="px-2.5 py-0.5 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 text-[10px] font-semibold rounded-lg">${ui.formatDateThai(item.start_date)} - ${item.end_date ? ui.formatDateThai(item.end_date) : 'ปัจจุบัน'}</span>
+                            </div>
+                            <h3 class="font-bold text-sm text-slate-900 dark:text-slate-100">${item.position}</h3>
+                            <p class="text-xs font-bold text-emerald-600 dark:text-emerald-400 mt-0.5">${item.organization}</p>
+                            ${item.description ? `<p class="text-xs text-slate-600 dark:text-slate-300 mt-2 bg-slate-50 dark:bg-slate-800/60 p-3 rounded-xl border border-slate-100 dark:border-slate-700/50 leading-relaxed">${item.description}</p>` : ''}
+                        </div>
+                    </div>
+                    <button type="button" onclick="deleteSubItem('/work-experience/${item.id}')" class="p-2 text-slate-400 hover:text-rose-500 hover:bg-rose-50 dark:hover:bg-slate-800 rounded-xl transition-colors no-print flex-shrink-0" title="ลบรายการ">
+                        <i data-lucide="trash-2" class="w-4 h-4"></i>
+                    </button>
+                </div>
+            `).join("");
+            if (typeof lucide !== "undefined" && lucide.createIcons) lucide.createIcons();
+        }
+
+        function renderResearchList(items) {
+            const c = document.getElementById("research-list");
+            if (!items || items.length === 0) {
+                c.innerHTML = `
+                    <div class="p-8 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 text-center">
+                        <div class="w-12 h-12 rounded-2xl bg-blue-500/10 text-blue-500 flex items-center justify-center mx-auto mb-2">
+                            <i data-lucide="book-open" class="w-6 h-6"></i>
+                        </div>
+                        <p class="text-xs text-slate-400 font-medium">ยังไม่มีข้อมูลผลงานวิจัย</p>
+                    </div>
+                `;
+                if (typeof lucide !== "undefined" && lucide.createIcons) lucide.createIcons();
+                return;
+            }
+            c.innerHTML = items.map(item => `
+                <div class="bg-white dark:bg-slate-900 p-5 rounded-3xl border border-slate-200/90 dark:border-slate-800 shadow-sm hover:border-blue-400 dark:hover:border-blue-600/80 transition-all flex items-start justify-between gap-4 hover-card-lift">
+                    <div>
+                        <div class="flex items-center gap-2 mb-1.5">
+                            <span class="px-2.5 py-0.5 bg-blue-50 dark:bg-blue-950/50 text-blue-700 dark:text-blue-300 text-[10px] font-bold rounded-lg border border-blue-200 dark:border-blue-800/50">${item.research_type}</span>
+                            <span class="px-2.5 py-0.5 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 text-[10px] font-mono font-bold rounded-lg">ปีงบประมาณ ${item.year}</span>
+                            ${item.budget ? `<span class="px-2.5 py-0.5 bg-emerald-50 dark:bg-emerald-950/50 text-emerald-700 dark:text-emerald-300 text-[10px] font-bold rounded-lg border border-emerald-200 dark:border-emerald-800/50">งบประมาณ ฿${Number(item.budget).toLocaleString()}</span>` : ''}
+                        </div>
+                        <h3 class="font-bold text-sm text-slate-900 dark:text-slate-100">${item.title}</h3>
+                        <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">แหล่งทุนวิจัย: <strong class="text-slate-800 dark:text-slate-200">${item.funding_source || '-'}</strong></p>
+                        ${item.url ? `<a href="${item.url}" target="_blank" class="text-xs font-bold text-blue-600 hover:text-blue-700 hover:underline mt-2 inline-flex items-center gap-1"><i data-lucide="external-link" class="w-3.5 h-3.5"></i> ลิงก์เอกสาร/ผลงานวิจัย</a>` : ''}
+                    </div>
+                    <button type="button" onclick="deleteSubItem('/research/${item.id}')" class="p-2 text-slate-400 hover:text-rose-500 hover:bg-rose-50 dark:hover:bg-slate-800 rounded-xl transition-colors no-print flex-shrink-0" title="ลบรายการ">
+                        <i data-lucide="trash-2" class="w-4 h-4"></i>
+                    </button>
+                </div>
+            `).join("");
+            if (typeof lucide !== "undefined" && lucide.createIcons) lucide.createIcons();
+        }
+
+        function renderPublicationList(items) {
+            const c = document.getElementById("publication-list");
+            if (!items || items.length === 0) {
+                c.innerHTML = `
+                    <div class="p-8 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 text-center">
+                        <div class="w-12 h-12 rounded-2xl bg-purple-500/10 text-purple-500 flex items-center justify-center mx-auto mb-2">
+                            <i data-lucide="file-text" class="w-6 h-6"></i>
+                        </div>
+                        <p class="text-xs text-slate-400 font-medium">ยังไม่มีข้อมูลผลงานตีพิมพ์</p>
+                    </div>
+                `;
+                if (typeof lucide !== "undefined" && lucide.createIcons) lucide.createIcons();
+                return;
+            }
+            c.innerHTML = items.map(item => `
+                <div class="bg-white dark:bg-slate-900 p-5 rounded-3xl border border-slate-200/90 dark:border-slate-800 shadow-sm hover:border-purple-400 dark:hover:border-purple-600/80 transition-all flex items-start justify-between gap-4 hover-card-lift">
+                    <div>
+                        <div class="flex items-center gap-2 mb-1.5">
+                            <span class="px-2.5 py-0.5 bg-purple-50 dark:bg-purple-950/50 text-purple-700 dark:text-purple-300 text-[10px] font-bold rounded-lg border border-purple-200 dark:border-purple-800/50">ปีที่ตีพิมพ์ พ.ศ. ${item.publication_year}</span>
+                            ${item.volume ? `<span class="px-2 py-0.5 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 text-[10px] font-mono rounded-md">Vol.${item.volume}</span>` : ''}
+                        </div>
+                        <h3 class="font-bold text-sm text-slate-900 dark:text-slate-100">${item.article_title}</h3>
+                        <p class="text-xs text-slate-600 dark:text-slate-300 mt-1">ผู้แต่ง: <strong>${item.authors}</strong></p>
+                        <p class="text-[11px] text-slate-400 mt-0.5">วารสาร/การประชุม: ${item.journal_conference_name} ${item.pages ? `(pp. ${item.pages})` : ''}</p>
+                        ${item.url ? `<a href="${item.url}" target="_blank" class="text-xs font-bold text-indigo-600 hover:text-indigo-700 hover:underline mt-2 inline-flex items-center gap-1"><i data-lucide="external-link" class="w-3.5 h-3.5"></i> DOI / เว็บไซต์ผลงาน</a>` : ''}
+                    </div>
+                    <button type="button" onclick="deleteSubItem('/publications/${item.id}')" class="p-2 text-slate-400 hover:text-rose-500 hover:bg-rose-50 dark:hover:bg-slate-800 rounded-xl transition-colors no-print flex-shrink-0" title="ลบรายการ">
+                        <i data-lucide="trash-2" class="w-4 h-4"></i>
+                    </button>
+                </div>
+            `).join("");
+            if (typeof lucide !== "undefined" && lucide.createIcons) lucide.createIcons();
+        }
+
+        function renderTrainingList(items) {
+            const c = document.getElementById("training-list");
+            if (!items || items.length === 0) {
+                c.innerHTML = `
+                    <div class="p-8 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 text-center">
+                        <div class="w-12 h-12 rounded-2xl bg-rose-500/10 text-rose-500 flex items-center justify-center mx-auto mb-2">
+                            <i data-lucide="sparkles" class="w-6 h-6"></i>
+                        </div>
+                        <p class="text-xs text-slate-400 font-medium">ยังไม่มีข้อมูลประวัติการอบรม</p>
+                    </div>
+                `;
+                if (typeof lucide !== "undefined" && lucide.createIcons) lucide.createIcons();
+                return;
+            }
+            c.innerHTML = items.map(item => `
+                <div class="bg-white dark:bg-slate-900 p-5 rounded-3xl border border-slate-200/90 dark:border-slate-800 shadow-sm hover:border-rose-400 dark:hover:border-rose-600/80 transition-all flex items-start justify-between gap-4 hover-card-lift">
+                    <div>
+                        <div class="flex items-center gap-2 mb-1.5">
+                            <span class="px-2.5 py-0.5 bg-rose-50 dark:bg-rose-950/50 text-rose-700 dark:text-rose-300 text-[10px] font-bold rounded-lg border border-rose-200 dark:border-rose-800/50">${item.hours} ชั่วโมง</span>
+                            ${item.location ? `<span class="px-2.5 py-0.5 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 text-[10px] rounded-lg font-medium"><i data-lucide="map-pin" class="w-3 h-3 inline"></i> ${item.location}</span>` : ''}
+                        </div>
+                        <h3 class="font-bold text-sm text-slate-900 dark:text-slate-100">${item.course_name}</h3>
+                        <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">หน่วยงานจัดอบรม: <strong class="text-slate-800 dark:text-slate-200">${item.organizer}</strong></p>
+                        <p class="text-[11px] text-slate-400 mt-0.5">ช่วงเวลา: ${ui.formatDateThai(item.start_date)} ถึง ${ui.formatDateThai(item.end_date)}</p>
+                    </div>
+                    <button type="button" onclick="deleteSubItem('/trainings/${item.id}')" class="p-2 text-slate-400 hover:text-rose-500 hover:bg-rose-50 dark:hover:bg-slate-800 rounded-xl transition-colors no-print flex-shrink-0" title="ลบรายการ">
+                        <i data-lucide="trash-2" class="w-4 h-4"></i>
+                    </button>
+                </div>
+            `).join("");
+            if (typeof lucide !== "undefined" && lucide.createIcons) lucide.createIcons();
+        }
+
+        async function deleteSubItem(endpoint) {
+            ui.confirmModal({
+                title: "ยืนยันการลบรายการ",
+                message: "คุณแน่ใจหรือไม่ว่าต้องการลบรายการนี้ออกจากระบบ?",
+                onConfirm: async () => {
+                    try {
+                        const res = await apiClient.delete(endpoint);
+                        ui.showToast(res.message, "success");
+                        loadPersonnelDetail();
+                    } catch (err) {
+                        ui.showToast(err.message, "error");
+                    }
+                }
+            });
+        }
+
+        function setupAvatarUpload() {
+            const fileInput = document.getElementById("avatar-file-input");
+            fileInput.addEventListener("change", async (e) => {
+                if (!e.target.files || e.target.files.length === 0) return;
+                const file = e.target.files[0];
+
+                const formData = new FormData();
+                formData.append("file", file);
+
+                try {
+                    ui.showToast("กำลังอัปโหลดรูปโปรไฟล์...", "info");
+                    const res = await apiClient.uploadFile(`/personnel/${personnelId}/avatar`, formData);
+                    ui.showToast(res.message, "success");
+                    document.getElementById("profile-avatar").src = res.avatar_url;
+                } catch (err) {
+                    ui.showToast(err.message, "error");
+                }
+            });
+        }
+
+        // Sub-item creation modals
+        function openAddEducationModal() {
+            const modal = document.createElement("div");
+            modal.className = "fixed inset-0 z-50 flex items-center justify-center bg-slate-950/70 backdrop-blur-sm p-4";
+            modal.innerHTML = `
+                <div class="bg-white dark:bg-slate-900 rounded-3xl max-w-lg w-full p-6 shadow-2xl border border-slate-200 dark:border-slate-800 animate-fadeIn">
+                    <div class="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-800 mb-4">
+                        <div class="flex items-center gap-2.5">
+                            <div class="w-9 h-9 rounded-xl bg-blue-500/10 text-blue-600 dark:text-blue-400 flex items-center justify-center font-bold">
+                                <i data-lucide="graduation-cap" class="w-5 h-5"></i>
+                            </div>
+                            <h3 class="text-sm font-bold text-slate-900 dark:text-slate-100">เพิ่มประวัติการศึกษา</h3>
+                        </div>
+                        <button type="button" onclick="this.closest('.fixed').remove()" class="p-1.5 text-slate-400 hover:text-slate-600 rounded-lg"><i data-lucide="x" class="w-4 h-4"></i></button>
+                    </div>
+                    <form id="add-edu-form" class="space-y-3.5 text-xs">
+                        <div>
+                            <label class="block font-semibold text-slate-700 dark:text-slate-300 mb-1">ระดับการศึกษา *</label>
+                            <select id="edu-degree-level" class="w-full p-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl outline-none focus:ring-2 focus:ring-blue-500" required>
+                                <option value="ปริญญาตรี">ปริญญาตรี</option>
+                                <option value="ปริญญาโท">ปริญญาโท</option>
+                                <option value="ปริญญาเอก">ปริญญาเอก</option>
+                                <option value="ปวส.">ปวส.</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block font-semibold text-slate-700 dark:text-slate-300 mb-1">วุฒิการศึกษา (เช่น วท.บ., Ph.D.) *</label>
+                            <input type="text" id="edu-degree-name" class="w-full p-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl outline-none focus:ring-2 focus:ring-blue-500" required placeholder="วท.บ.">
+                        </div>
+                        <div>
+                            <label class="block font-semibold text-slate-700 dark:text-slate-300 mb-1">สาขาวิชา *</label>
+                            <input type="text" id="edu-field" class="w-full p-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl outline-none focus:ring-2 focus:ring-blue-500" required placeholder="วิทยาการคอมพิวเตอร์">
+                        </div>
+                        <div>
+                            <label class="block font-semibold text-slate-700 dark:text-slate-300 mb-1">สถาบันการศึกษา *</label>
+                            <input type="text" id="edu-institution" class="w-full p-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl outline-none focus:ring-2 focus:ring-blue-500" required placeholder="มหาวิทยาลัย...">
+                        </div>
+                        <div>
+                            <label class="block font-semibold text-slate-700 dark:text-slate-300 mb-1">ปีที่สำเร็จการศึกษา (พ.ศ.) *</label>
+                            <input type="number" id="edu-year" class="w-full p-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl outline-none focus:ring-2 focus:ring-blue-500" required placeholder="2560" value="2560">
+                        </div>
+                        <div class="flex justify-end gap-2 pt-4 border-t border-slate-100 dark:border-slate-800">
+                            <button type="button" onclick="this.closest('.fixed').remove()" class="px-4 py-2 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl font-medium">ยกเลิก</button>
+                            <button type="submit" class="px-5 py-2 bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-bold rounded-xl shadow-md shadow-blue-500/20 hover:scale-[1.02] transition-all">บันทึก</button>
+                        </div>
+                    </form>
+                </div>
+            `;
+            document.body.appendChild(modal);
+            if (typeof lucide !== "undefined" && lucide.createIcons) lucide.createIcons();
+            modal.querySelector("#add-edu-form").onsubmit = async (e) => {
+                e.preventDefault();
+                try {
+                    await apiClient.post(`/personnel/${personnelId}/education`, {
+                        degree_level: document.getElementById("edu-degree-level").value,
+                        degree_name: document.getElementById("edu-degree-name").value,
+                        field_of_study: document.getElementById("edu-field").value,
+                        institution: document.getElementById("edu-institution").value,
+                        country: "ไทย",
+                        graduation_year: parseInt(document.getElementById("edu-year").value)
+                    });
+                    ui.showToast("เพิ่มประวัติการศึกษาสำเร็จ", "success");
+                    modal.remove();
+                    loadPersonnelDetail();
+                } catch (err) {
+                    ui.showToast(err.message, "error");
+                }
+            };
+        }
+
+        function openAddAcademicModal() {
+            const modal = document.createElement("div");
+            modal.className = "fixed inset-0 z-50 flex items-center justify-center bg-slate-950/70 backdrop-blur-sm p-4";
+            modal.innerHTML = `
+                <div class="bg-white dark:bg-slate-900 rounded-3xl max-w-lg w-full p-6 shadow-2xl border border-slate-200 dark:border-slate-800 animate-fadeIn">
+                    <div class="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-800 mb-4">
+                        <div class="flex items-center gap-2.5">
+                            <div class="w-9 h-9 rounded-xl bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 flex items-center justify-center font-bold">
+                                <i data-lucide="award" class="w-5 h-5"></i>
+                            </div>
+                            <h3 class="text-sm font-bold text-slate-900 dark:text-slate-100">เพิ่มตำแหน่งทางวิชาการ</h3>
+                        </div>
+                        <button type="button" onclick="this.closest('.fixed').remove()" class="p-1.5 text-slate-400 hover:text-slate-600 rounded-lg"><i data-lucide="x" class="w-4 h-4"></i></button>
+                    </div>
+                    <form id="add-academic-form" class="space-y-3.5 text-xs">
+                        <div>
+                            <label class="block font-semibold text-slate-700 dark:text-slate-300 mb-1">ตำแหน่งทางวิชาการ *</label>
+                            <select id="acad-position-title" class="w-full p-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl outline-none focus:ring-2 focus:ring-indigo-500" required>
+                                <option value="อาจารย์">อาจารย์</option>
+                                <option value="ผู้ช่วยศาสตราจารย์">ผู้ช่วยศาสตราจารย์</option>
+                                <option value="รองศาสตราจารย์">รองศาสตราจารย์</option>
+                                <option value="ศาสตราจารย์">ศาสตราจารย์</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block font-semibold text-slate-700 dark:text-slate-300 mb-1">เลขที่คำสั่งแต่งตั้ง</label>
+                            <input type="text" id="acad-order-number" class="w-full p-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl outline-none focus:ring-2 focus:ring-indigo-500" placeholder="เช่น มรภ.รอ. 120/2565">
+                        </div>
+                        <div>
+                            <label class="block font-semibold text-slate-700 dark:text-slate-300 mb-1">วันที่ได้รับแต่งตั้ง</label>
+                            <input type="date" id="acad-appointed-date" class="w-full p-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl outline-none focus:ring-2 focus:ring-indigo-500">
+                        </div>
+                        <div class="flex justify-end gap-2 pt-4 border-t border-slate-100 dark:border-slate-800">
+                            <button type="button" onclick="this.closest('.fixed').remove()" class="px-4 py-2 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl font-medium">ยกเลิก</button>
+                            <button type="submit" class="px-5 py-2 bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-bold rounded-xl shadow-md shadow-indigo-500/20 hover:scale-[1.02] transition-all">บันทึก</button>
+                        </div>
+                    </form>
+                </div>
+            `;
+            document.body.appendChild(modal);
+            if (typeof lucide !== "undefined" && lucide.createIcons) lucide.createIcons();
+            modal.querySelector("#add-academic-form").onsubmit = async (e) => {
+                e.preventDefault();
+                try {
+                    await apiClient.post(`/personnel/${personnelId}/academic-position`, {
+                        position_title: document.getElementById("acad-position-title").value,
+                        order_number: document.getElementById("acad-order-number").value || null,
+                        appointed_date: document.getElementById("acad-appointed-date").value || null
+                    });
+                    ui.showToast("เพิ่มตำแหน่งทางวิชาการสำเร็จ", "success");
+                    modal.remove();
+                    loadPersonnelDetail();
+                } catch (err) {
+                    ui.showToast(err.message, "error");
+                }
+            };
+        }
+
+        function openAddWorkModal() {
+            const modal = document.createElement("div");
+            modal.className = "fixed inset-0 z-50 flex items-center justify-center bg-slate-950/70 backdrop-blur-sm p-4";
+            modal.innerHTML = `
+                <div class="bg-white dark:bg-slate-900 rounded-3xl max-w-lg w-full p-6 shadow-2xl border border-slate-200 dark:border-slate-800 animate-fadeIn">
+                    <div class="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-800 mb-4">
+                        <div class="flex items-center gap-2.5">
+                            <div class="w-9 h-9 rounded-xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 flex items-center justify-center font-bold">
+                                <i data-lucide="briefcase" class="w-5 h-5"></i>
+                            </div>
+                            <h3 class="text-sm font-bold text-slate-900 dark:text-slate-100">เพิ่มประวัติการทำงาน</h3>
+                        </div>
+                        <button type="button" onclick="this.closest('.fixed').remove()" class="p-1.5 text-slate-400 hover:text-slate-600 rounded-lg"><i data-lucide="x" class="w-4 h-4"></i></button>
+                    </div>
+                    <form id="add-work-form" class="space-y-3.5 text-xs">
+                        <div>
+                            <label class="block font-semibold text-slate-700 dark:text-slate-300 mb-1">หน่วยงาน / องค์กร *</label>
+                            <input type="text" id="work-org" class="w-full p-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl outline-none focus:ring-2 focus:ring-emerald-500" required placeholder="เช่น บริษัท... หรือ มหาวิทยาลัย...">
+                        </div>
+                        <div>
+                            <label class="block font-semibold text-slate-700 dark:text-slate-300 mb-1">ตำแหน่ง *</label>
+                            <input type="text" id="work-pos" class="w-full p-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl outline-none focus:ring-2 focus:ring-emerald-500" required placeholder="เช่น Senior Developer, นักวิจัย">
+                        </div>
+                        <div class="grid grid-cols-2 gap-3">
+                            <div>
+                                <label class="block font-semibold text-slate-700 dark:text-slate-300 mb-1">วันที่เริ่มต้น *</label>
+                                <input type="date" id="work-start" class="w-full p-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl outline-none focus:ring-2 focus:ring-emerald-500" required>
+                            </div>
+                            <div>
+                                <label class="block font-semibold text-slate-700 dark:text-slate-300 mb-1">วันที่สิ้นสุด (เว้นว่างหากทำอยู่)</label>
+                                <input type="date" id="work-end" class="w-full p-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl outline-none focus:ring-2 focus:ring-emerald-500">
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block font-semibold text-slate-700 dark:text-slate-300 mb-1">รายละเอียดงาน</label>
+                            <textarea id="work-desc" class="w-full p-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl outline-none focus:ring-2 focus:ring-emerald-500" rows="2" placeholder="หน้าที่และความรับผิดชอบโดยย่อ..."></textarea>
+                        </div>
+                        <div class="flex justify-end gap-2 pt-4 border-t border-slate-100 dark:border-slate-800">
+                            <button type="button" onclick="this.closest('.fixed').remove()" class="px-4 py-2 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl font-medium">ยกเลิก</button>
+                            <button type="submit" class="px-5 py-2 bg-gradient-to-r from-emerald-600 to-teal-600 text-white font-bold rounded-xl shadow-md shadow-emerald-500/20 hover:scale-[1.02] transition-all">บันทึก</button>
+                        </div>
+                    </form>
+                </div>
+            `;
+            document.body.appendChild(modal);
+            if (typeof lucide !== "undefined" && lucide.createIcons) lucide.createIcons();
+            modal.querySelector("#add-work-form").onsubmit = async (e) => {
+                e.preventDefault();
+                try {
+                    await apiClient.post(`/personnel/${personnelId}/work-experience`, {
+                        organization: document.getElementById("work-org").value,
+                        position: document.getElementById("work-pos").value,
+                        start_date: document.getElementById("work-start").value,
+                        end_date: document.getElementById("work-end").value || null,
+                        description: document.getElementById("work-desc").value || null
+                    });
+                    ui.showToast("เพิ่มประวัติการทำงานสำเร็จ", "success");
+                    modal.remove();
+                    loadPersonnelDetail();
+                } catch (err) {
+                    ui.showToast(err.message, "error");
+                }
+            };
+        }
+
+        function openAddResearchModal() {
+            const modal = document.createElement("div");
+            modal.className = "fixed inset-0 z-50 flex items-center justify-center bg-slate-950/70 backdrop-blur-sm p-4";
+            modal.innerHTML = `
+                <div class="bg-white dark:bg-slate-900 rounded-3xl max-w-lg w-full p-6 shadow-2xl border border-slate-200 dark:border-slate-800 animate-fadeIn">
+                    <div class="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-800 mb-4">
+                        <div class="flex items-center gap-2.5">
+                            <div class="w-9 h-9 rounded-xl bg-blue-500/10 text-blue-600 dark:text-blue-400 flex items-center justify-center font-bold">
+                                <i data-lucide="book-open" class="w-5 h-5"></i>
+                            </div>
+                            <h3 class="text-sm font-bold text-slate-900 dark:text-slate-100">เพิ่มผลงานวิจัย</h3>
+                        </div>
+                        <button type="button" onclick="this.closest('.fixed').remove()" class="p-1.5 text-slate-400 hover:text-slate-600 rounded-lg"><i data-lucide="x" class="w-4 h-4"></i></button>
+                    </div>
+                    <form id="add-res-form" class="space-y-3.5 text-xs">
+                        <div>
+                            <label class="block font-semibold text-slate-700 dark:text-slate-300 mb-1">ชื่องานวิจัย *</label>
+                            <input type="text" id="res-title" class="w-full p-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl outline-none focus:ring-2 focus:ring-blue-500" required placeholder="ชื่อโครงการวิจัย...">
+                        </div>
+                        <div class="grid grid-cols-2 gap-3">
+                            <div>
+                                <label class="block font-semibold text-slate-700 dark:text-slate-300 mb-1">ประเภทงานวิจัย</label>
+                                <select id="res-type" class="w-full p-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl outline-none focus:ring-2 focus:ring-blue-500">
+                                    <option value="วิจัยพื้นฐาน">วิจัยพื้นฐาน</option>
+                                    <option value="วิจัยประยุกต์">วิจัยประยุกต์</option>
+                                    <option value="วิจัยและพัฒนา">วิจัยและพัฒนา</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block font-semibold text-slate-700 dark:text-slate-300 mb-1">ปีงบประมาณ (พ.ศ.) *</label>
+                                <input type="number" id="res-year" class="w-full p-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl outline-none focus:ring-2 focus:ring-blue-500" required value="2566">
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-2 gap-3">
+                            <div>
+                                <label class="block font-semibold text-slate-700 dark:text-slate-300 mb-1">แหล่งทุน</label>
+                                <input type="text" id="res-funding" class="w-full p-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl outline-none focus:ring-2 focus:ring-blue-500" placeholder="เช่น วช. หรือ ทุนภายใน">
+                            </div>
+                            <div>
+                                <label class="block font-semibold text-slate-700 dark:text-slate-300 mb-1">งบประมาณ (บาท)</label>
+                                <input type="number" id="res-budget" class="w-full p-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl outline-none focus:ring-2 focus:ring-blue-500" placeholder="500000">
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block font-semibold text-slate-700 dark:text-slate-300 mb-1">ลิงก์เอกสาร/เว็บไซต์</label>
+                            <input type="url" id="res-url" class="w-full p-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl outline-none focus:ring-2 focus:ring-blue-500" placeholder="https://...">
+                        </div>
+                        <div class="flex justify-end gap-2 pt-4 border-t border-slate-100 dark:border-slate-800">
+                            <button type="button" onclick="this.closest('.fixed').remove()" class="px-4 py-2 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl font-medium">ยกเลิก</button>
+                            <button type="submit" class="px-5 py-2 bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-bold rounded-xl shadow-md shadow-blue-500/20 hover:scale-[1.02] transition-all">บันทึก</button>
+                        </div>
+                    </form>
+                </div>
+            `;
+            document.body.appendChild(modal);
+            if (typeof lucide !== "undefined" && lucide.createIcons) lucide.createIcons();
+            modal.querySelector("#add-res-form").onsubmit = async (e) => {
+                e.preventDefault();
+                try {
+                    await apiClient.post(`/personnel/${personnelId}/research`, {
+                        title: document.getElementById("res-title").value,
+                        research_type: document.getElementById("res-type").value,
+                        year: parseInt(document.getElementById("res-year").value),
+                        funding_source: document.getElementById("res-funding").value || null,
+                        budget: document.getElementById("res-budget").value ? parseFloat(document.getElementById("res-budget").value) : null,
+                        url: document.getElementById("res-url").value || null
+                    });
+                    ui.showToast("เพิ่มผลงานวิจัยสำเร็จ", "success");
+                    modal.remove();
+                    loadPersonnelDetail();
+                } catch (err) {
+                    ui.showToast(err.message, "error");
+                }
+            };
+        }
+
+        function openAddPublicationModal() {
+            const modal = document.createElement("div");
+            modal.className = "fixed inset-0 z-50 flex items-center justify-center bg-slate-950/70 backdrop-blur-sm p-4";
+            modal.innerHTML = `
+                <div class="bg-white dark:bg-slate-900 rounded-3xl max-w-lg w-full p-6 shadow-2xl border border-slate-200 dark:border-slate-800 animate-fadeIn">
+                    <div class="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-800 mb-4">
+                        <div class="flex items-center gap-2.5">
+                            <div class="w-9 h-9 rounded-xl bg-purple-500/10 text-purple-600 dark:text-purple-400 flex items-center justify-center font-bold">
+                                <i data-lucide="file-text" class="w-5 h-5"></i>
+                            </div>
+                            <h3 class="text-sm font-bold text-slate-900 dark:text-slate-100">เพิ่มผลงานตีพิมพ์ทางวิชาการ</h3>
+                        </div>
+                        <button type="button" onclick="this.closest('.fixed').remove()" class="p-1.5 text-slate-400 hover:text-slate-600 rounded-lg"><i data-lucide="x" class="w-4 h-4"></i></button>
+                    </div>
+                    <form id="add-pub-form" class="space-y-3.5 text-xs">
+                        <div>
+                            <label class="block font-semibold text-slate-700 dark:text-slate-300 mb-1">ชื่อบทความวิชาการ/วิจัย *</label>
+                            <input type="text" id="pub-title" class="w-full p-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl outline-none focus:ring-2 focus:ring-purple-500" required placeholder="ชื่อบทความ...">
+                        </div>
+                        <div>
+                            <label class="block font-semibold text-slate-700 dark:text-slate-300 mb-1">ผู้แต่งทั้งหมด *</label>
+                            <input type="text" id="pub-authors" class="w-full p-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl outline-none focus:ring-2 focus:ring-purple-500" required placeholder="เช่น สมชาย สายชล, สมศักดิ์ มีดี">
+                        </div>
+                        <div>
+                            <label class="block font-semibold text-slate-700 dark:text-slate-300 mb-1">ชื่อวารสาร / การประชุมวิชาการ *</label>
+                            <input type="text" id="pub-journal" class="w-full p-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl outline-none focus:ring-2 focus:ring-purple-500" required placeholder="เช่น IEEE Access หรือ วารสารวิชาการ...">
+                        </div>
+                        <div class="grid grid-cols-3 gap-2.5">
+                            <div>
+                                <label class="block font-semibold text-slate-700 dark:text-slate-300 mb-1">ปีที่ตีพิมพ์ *</label>
+                                <input type="number" id="pub-year" class="w-full p-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl outline-none focus:ring-2 focus:ring-purple-500" required value="2566">
+                            </div>
+                            <div>
+                                <label class="block font-semibold text-slate-700 dark:text-slate-300 mb-1">เล่มที่ (Volume)</label>
+                                <input type="text" id="pub-vol" class="w-full p-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl outline-none focus:ring-2 focus:ring-purple-500" placeholder="10(2)">
+                            </div>
+                            <div>
+                                <label class="block font-semibold text-slate-700 dark:text-slate-300 mb-1">เลขหน้า (Pages)</label>
+                                <input type="text" id="pub-pages" class="w-full p-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl outline-none focus:ring-2 focus:ring-purple-500" placeholder="120-135">
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block font-semibold text-slate-700 dark:text-slate-300 mb-1">DOI หรือ URL</label>
+                            <input type="url" id="pub-url" class="w-full p-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl outline-none focus:ring-2 focus:ring-purple-500" placeholder="https://doi.org/...">
+                        </div>
+                        <div class="flex justify-end gap-2 pt-4 border-t border-slate-100 dark:border-slate-800">
+                            <button type="button" onclick="this.closest('.fixed').remove()" class="px-4 py-2 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl font-medium">ยกเลิก</button>
+                            <button type="submit" class="px-5 py-2 bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-bold rounded-xl shadow-md shadow-purple-500/20 hover:scale-[1.02] transition-all">บันทึก</button>
+                        </div>
+                    </form>
+                </div>
+            `;
+            document.body.appendChild(modal);
+            if (typeof lucide !== "undefined" && lucide.createIcons) lucide.createIcons();
+            modal.querySelector("#add-pub-form").onsubmit = async (e) => {
+                e.preventDefault();
+                try {
+                    await apiClient.post(`/personnel/${personnelId}/publications`, {
+                        article_title: document.getElementById("pub-title").value,
+                        authors: document.getElementById("pub-authors").value,
+                        journal_conference_name: document.getElementById("pub-journal").value,
+                        publication_year: parseInt(document.getElementById("pub-year").value),
+                        volume: document.getElementById("pub-vol").value || null,
+                        pages: document.getElementById("pub-pages").value || null,
+                        url: document.getElementById("pub-url").value || null
+                    });
+                    ui.showToast("เพิ่มผลงานตีพิมพ์สำเร็จ", "success");
+                    modal.remove();
+                    loadPersonnelDetail();
+                } catch (err) {
+                    ui.showToast(err.message, "error");
+                }
+            };
+        }
+
+        function openAddTrainingModal() {
+            const modal = document.createElement("div");
+            modal.className = "fixed inset-0 z-50 flex items-center justify-center bg-slate-950/70 backdrop-blur-sm p-4";
+            modal.innerHTML = `
+                <div class="bg-white dark:bg-slate-900 rounded-3xl max-w-lg w-full p-6 shadow-2xl border border-slate-200 dark:border-slate-800 animate-fadeIn">
+                    <div class="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-800 mb-4">
+                        <div class="flex items-center gap-2.5">
+                            <div class="w-9 h-9 rounded-xl bg-rose-500/10 text-rose-600 dark:text-rose-400 flex items-center justify-center font-bold">
+                                <i data-lucide="sparkles" class="w-5 h-5"></i>
+                            </div>
+                            <h3 class="text-sm font-bold text-slate-900 dark:text-slate-100">เพิ่มประวัติการฝึกอบรม/สัมมนา</h3>
+                        </div>
+                        <button type="button" onclick="this.closest('.fixed').remove()" class="p-1.5 text-slate-400 hover:text-slate-600 rounded-lg"><i data-lucide="x" class="w-4 h-4"></i></button>
+                    </div>
+                    <form id="add-train-form" class="space-y-3.5 text-xs">
+                        <div>
+                            <label class="block font-semibold text-slate-700 dark:text-slate-300 mb-1">หลักสูตร / หัวข้อการอบรม *</label>
+                            <input type="text" id="train-course" class="w-full p-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl outline-none focus:ring-2 focus:ring-rose-500" required placeholder="ชื่อหลักสูตร...">
+                        </div>
+                        <div>
+                            <label class="block font-semibold text-slate-700 dark:text-slate-300 mb-1">หน่วยงานที่จัด *</label>
+                            <input type="text" id="train-organizer" class="w-full p-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl outline-none focus:ring-2 focus:ring-rose-500" required placeholder="เช่น สวทช. หรือ มหาวิทยาลัย...">
+                        </div>
+                        <div class="grid grid-cols-2 gap-3">
+                            <div>
+                                <label class="block font-semibold text-slate-700 dark:text-slate-300 mb-1">วันที่เริ่มต้น *</label>
+                                <input type="date" id="train-start" class="w-full p-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl outline-none focus:ring-2 focus:ring-rose-500" required>
+                            </div>
+                            <div>
+                                <label class="block font-semibold text-slate-700 dark:text-slate-300 mb-1">วันที่สิ้นสุด *</label>
+                                <input type="date" id="train-end" class="w-full p-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl outline-none focus:ring-2 focus:ring-rose-500" required>
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-2 gap-3">
+                            <div>
+                                <label class="block font-semibold text-slate-700 dark:text-slate-300 mb-1">จำนวนชั่วโมง *</label>
+                                <input type="number" id="train-hours" class="w-full p-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl outline-none focus:ring-2 focus:ring-rose-500" required value="6">
+                            </div>
+                            <div>
+                                <label class="block font-semibold text-slate-700 dark:text-slate-300 mb-1">สถานที่ / ช่องทาง</label>
+                                <input type="text" id="train-location" class="w-full p-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl outline-none focus:ring-2 focus:ring-rose-500" placeholder="ออนไลน์ (Zoom) หรือ สถานที่...">
+                            </div>
+                        </div>
+                        <div class="flex justify-end gap-2 pt-4 border-t border-slate-100 dark:border-slate-800">
+                            <button type="button" onclick="this.closest('.fixed').remove()" class="px-4 py-2 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl font-medium">ยกเลิก</button>
+                            <button type="submit" class="px-5 py-2 bg-gradient-to-r from-rose-600 to-pink-600 text-white font-bold rounded-xl shadow-md shadow-rose-500/20 hover:scale-[1.02] transition-all">บันทึก</button>
+                        </div>
+                    </form>
+                </div>
+            `;
+            document.body.appendChild(modal);
+            if (typeof lucide !== "undefined" && lucide.createIcons) lucide.createIcons();
+            modal.querySelector("#add-train-form").onsubmit = async (e) => {
+                e.preventDefault();
+                try {
+                    await apiClient.post(`/personnel/${personnelId}/trainings`, {
+                        course_name: document.getElementById("train-course").value,
+                        organizer: document.getElementById("train-organizer").value,
+                        start_date: document.getElementById("train-start").value,
+                        end_date: document.getElementById("train-end").value,
+                        hours: parseInt(document.getElementById("train-hours").value),
+                        location: document.getElementById("train-location").value || null
+                    });
+                    ui.showToast("เพิ่มประวัติการอบรมสำเร็จ", "success");
+                    modal.remove();
+                    loadPersonnelDetail();
+                } catch (err) {
+                    ui.showToast(err.message, "error");
+                }
+            };
+        }
+    </script>
+</body>
+</html>
